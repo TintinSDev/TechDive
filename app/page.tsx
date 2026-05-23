@@ -131,8 +131,8 @@ export default function LandingPage() {
             Jobs For Every Tech Role
           </h2>
           <p className="text-slate-400 text-center mb-12">
-            Whether you&apos;re specializing or learning, we&apos;ve got opportunities for
-            you.
+            Whether you&apos;re specializing or learning, we&apos;ve got
+            opportunities for you.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -416,17 +416,17 @@ export default function LandingPage() {
               <h4 className="text-white font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/jobs" className="hover:text-white transition">
                     Browse Jobs
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/pricing" className="hover:text-white transition">
                     Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/recruiters" className="hover:text-white transition">
                     For Recruiters
                   </a>
                 </li>
@@ -436,23 +436,38 @@ export default function LandingPage() {
               <h4 className="text-white font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/blog" className="hover:text-white transition">
                     Blog
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/contact" className="hover:text-white transition">
                     Contact
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a href="/privacy" className="hover:text-white transition">
                     Privacy
                   </a>
                 </li>
               </ul>
             </div>
             <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <a href="/privacy" className="hover:text-white transition">
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="/terms" className="hover:text-white transition">
+                    Terms
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {/* <div>
               <h4 className="text-white font-semibold mb-4">Follow</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
@@ -471,7 +486,7 @@ export default function LandingPage() {
                   </a>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
           <div className="border-t border-slate-700 pt-8 text-center text-slate-400 text-sm">
             <p>
