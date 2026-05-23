@@ -1,8 +1,8 @@
 "use client";
 
-import { useSavedJobs } from "@/lib/hooks";
-import { JobCard } from "@/components/jobs/JobCard";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { useSavedJobs } from "@/app/lib/hooks";
+import { JobCard } from "@/app/components/jobs/JobCard";
+import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 
 export default function SavedJobsPage() {
   const { saved, loading } = useSavedJobs();

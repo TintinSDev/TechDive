@@ -465,6 +465,11 @@ export default function LandingPage() {
                     Terms
                   </a>
                 </li>
+                <li>
+                  <a href="/cookies" className="hover:text-white transition">
+                    Cookies
+                  </a>
+                </li>
               </ul>
             </div>
             {/* <div>

@@ -1,11 +1,11 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useAuth } from "@/lib/hooks";
+import { useAuth } from "@/app/lib/hooks";
 import { useRouter } from "next/navigation";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-import { Sidebar } from "@/components/dashboard/Sidebar";
-import { Header } from "@/components/dashboard/Header";
+import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
+import { Sidebar } from "@/app/components/dashboard/Sidebar";
+import { Header } from "@/app/components/dashboard/Header";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, loading, isAuthenticated } = useAuth();

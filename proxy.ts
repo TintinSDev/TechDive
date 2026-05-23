@@ -1,9 +1,42 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// The function export is now named "proxy" or default
 export function proxy(request: NextRequest) {
-  // Your routing / auth logic goes here
+  const token = request.cookies.get("auth_token")?.value;
+  const { pathname } = request.nextUrl;
+
+  // Public paths that don't need authentication
+  const publicPaths = [
+    "/",
+    "/jobs",
+    "/pricing",
+    "/login",
+    "/signup",
+    "/forgot-password",
+  ];
+  const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
+
+  // Dashboard paths that require authentication
+  const dashboardPaths = [
+    "/dashboard",
+    "/profile",
+    "/preferences",
+    "/settings",
+    "/applications",
+  ];
+  const isDashboardPath = dashboardPaths.some((path) =>
+    pathname.startsWith(path),
+  );
+
+  // Check authentication
+  if (isDashboardPath && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if ((pathname === "/login" || pathname === "/signup") && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   return NextResponse.next();
 }
 

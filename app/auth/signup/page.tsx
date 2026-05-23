@@ -3,8 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signup } from "@/lib/auth";
-import Button from "@/components/common/Button";
+import { signup } from "@/app/lib/auth";
+import { Button } from "@/app/components/common/Button";
 
 export default function SignupPage() {
   const router = useRouter();

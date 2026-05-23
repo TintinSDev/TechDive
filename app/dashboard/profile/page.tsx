@@ -1,10 +1,10 @@
 "use client";
 
-import { useUserProfile } from "@/lib/hooks";
-import { COMMON_SKILLS, JOB_CATEGORIES } from "@/lib/constants";
-import { Button } from "@/components/common/Button";
+import { useUserProfile } from "@/app/lib/hooks";
+import { COMMON_SKILLS, JOB_CATEGORIES } from "@/app/lib/constants";
+import { Button } from "@/app/components/common/Button";
 import { useState, FormEvent } from "react";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 
 export default function ProfilePage() {
   const { user, loading, updateProfile } = useUserProfile();
