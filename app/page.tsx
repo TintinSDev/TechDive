@@ -319,7 +319,9 @@ export default function LandingPage() {
               <button
                 onClick={() => {
                   setSelectedPlan("enterprise");
-                  document.querySelector('input[type="email"]')?.focus();
+                  document
+                    .querySelector<HTMLInputElement>('input[type="email"]')
+                    ?.focus();
                 }}
                 className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition font-semibold"
               >
