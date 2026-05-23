@@ -11,8 +11,6 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function LandingPage() {
   const [email, setEmail] = useState("");
@@ -40,8 +38,7 @@ export default function LandingPage() {
       console.error("Signup error:", error);
     }
   };
-  <Analytics />;
-  <SpeedInsights />;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Navigation */}
