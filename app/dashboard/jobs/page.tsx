@@ -1,0 +1,27 @@
+"use client";
+
+import { useSavedJobs } from "@/lib/hooks";
+import { JobCard } from "@/components/jobs/JobCard";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+
+export default function SavedJobsPage() {
+  const { saved, loading } = useSavedJobs();
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-8">Saved Jobs</h1>
+
+      {loading ? (
+        <LoadingSpinner />
+      ) : saved.length ? (
+        <div className="space-y-4">
+          {saved.map((item) => (
+            <JobCard key={item.job.id} job={item.job} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500">You haven't saved any jobs yet</p>
+      )}
+    </div>
+  );
+}

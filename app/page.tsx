@@ -1,5 +1,5 @@
 "use client";
-import { galada } from "@/lib/fonts";
+import { galada } from "@/app/lib/fonts";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -131,7 +131,7 @@ export default function LandingPage() {
             Jobs For Every Tech Role
           </h2>
           <p className="text-slate-400 text-center mb-12">
-            Whether you're specializing or learning, we've got opportunities for
+            Whether you&apos;re specializing or learning, we&apos;ve got opportunities for
             you.
           </p>
 
