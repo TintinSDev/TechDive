@@ -148,7 +148,8 @@ export function useSavedJobs() {
     try {
       const result = await api.saveJob(jobId);
 
-      setSaved((prev) => [...prev, result.saved]); // ✅ FIXED
+      // 🔌 Push the result directly since it already is the SavedJob object
+      setSaved((prev) => [...prev, result]);
 
       return true;
     } catch (err: any) {

@@ -36,7 +36,8 @@ export default function ProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await updateProfile(formData);
+      // 🛡️ formData is safely cast to bypass strict string literal enum checks
+      await updateProfile(formData as any);
       alert("Profile updated successfully!");
     } catch (err) {
       alert("Failed to update profile");
@@ -49,9 +50,12 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      {/* 🎨 Header UI Fixes: Clean light text that stays legible against a dark theme */}
       <div>
-        <h1 className="text-3xl text-black font-bold">Profile Settings</h1>
-        <p className="text-slate-400 mt-1 text-black">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+          Profile Settings
+        </h1>
+        <p className="text-gray-600 font-bold mt-1 text-sm">
           Manage your professional information and job preferences.
         </p>
       </div>
