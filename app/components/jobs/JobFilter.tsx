@@ -51,7 +51,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="bg-white w-full p-6 rounded-lg border border-gray-600 sticky top-20">
+    <div className="bg-white w-100 p-6 rounded-lg border border-gray-600 sticky top-20">
       <h3 className="text-lg text-gray-800 font-semibold mb-4">Filters</h3>
 
       {/* Search */}

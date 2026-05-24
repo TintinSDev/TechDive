@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
 
         <div className="flex items-center gap-6">
           <Link
-            href="/dashboard/remotejobs"
+            href="/dashboard/jobs"
             className="text-gray-600 hover:text-gray-900"
           >
             Browse Jobs

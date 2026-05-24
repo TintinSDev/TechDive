@@ -34,9 +34,9 @@ export const JobCard: React.FC<JobCardProps> = ({
   };
 
   return (
-    <Link href={`/job/${job.id}`}>
-      <div className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-lg transition">
-        <div className="flex justify-between items-start gap-4">
+    <Link href={`/dashboard/jobs/${job.id}`} className="block">
+      <div className="p-6 bg-cyan-100 ml-45 border border-gray-200 rounded-lg hover:shadow-lg transition">
+        <div className="flex justify-between items-start gap-6">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
               {job.title}

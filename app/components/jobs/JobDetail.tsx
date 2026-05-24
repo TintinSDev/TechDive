@@ -47,7 +47,7 @@ export const JobDetail: React.FC<JobDetailProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white w-full rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-8">
         <div className="flex justify-between items-start gap-6">

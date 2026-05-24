@@ -71,7 +71,7 @@ export const PRICING_PLANS = [
 export const NAVIGATION = [
   {
     name: "Browse Jobs",
-    href: "/dashboard/remotejobs",
+    href: "/dashboard/jobs",
     requiresAuth: false,
   },
   {

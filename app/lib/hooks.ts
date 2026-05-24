@@ -144,33 +144,31 @@ export function useSavedJobs() {
     }
   }, []);
 
-  const saveJob = useCallback(
-    async (jobId: string) => {
-      try {
-        const result = await api.saveJob(jobId);
-        setSaved([...saved, result]);
-        return true;
-      } catch (err: any) {
-        setError(err.message || "Failed to save job");
-        return false;
-      }
-    },
-    [saved],
-  );
+  const saveJob = useCallback(async (jobId: string) => {
+    try {
+      const result = await api.saveJob(jobId);
 
-  const unsaveJob = useCallback(
-    async (jobId: string) => {
-      try {
-        await api.unsaveJob(jobId);
-        setSaved(saved.filter((s) => s.jobId !== jobId));
-        return true;
-      } catch (err: any) {
-        setError(err.message || "Failed to unsave job");
-        return false;
-      }
-    },
-    [saved],
-  );
+      setSaved((prev) => [...prev, result.saved]); // ✅ FIXED
+
+      return true;
+    } catch (err: any) {
+      setError(err.message || "Failed to save job");
+      return false;
+    }
+  }, []);
+
+  const unsaveJob = useCallback(async (jobId: string) => {
+    try {
+      await api.unsaveJob(jobId);
+
+      setSaved((prev) => prev.filter((s) => s.jobId !== jobId)); // ✅ FIXED
+
+      return true;
+    } catch (err: any) {
+      setError(err.message || "Failed to unsave job");
+      return false;
+    }
+  }, []);
 
   const isJobSaved = (jobId: string): boolean => {
     return saved.some((s) => s.jobId === jobId);

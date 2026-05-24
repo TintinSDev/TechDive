@@ -1,88 +1,68 @@
 "use client";
 
-import { useJob, useSavedJobs } from "@/app/lib/hooks";
-import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
-import { Button } from "@/app/components/common/Button";
 import { useState } from "react";
+import { useJobs } from "@/app/lib/hooks";
+import { JobFilter } from "@/app/components/jobs/JobFilter";
+import { JobCard } from "@/app/components/jobs/JobCard";
+import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
-  const { job, loading, error } = useJob(params.id);
-  const { isJobSaved, saveJob, unsaveJob } = useSavedJobs();
-  const [saving, setSaving] = useState(false);
-
-  if (loading) return <LoadingSpinner />;
-  if (error || !job) return <p className="text-red-600">Job not found</p>;
-
-  const isSaved = isJobSaved(job.id);
-
-  const handleSaveToggle = async () => {
-    setSaving(true);
-    if (isSaved) {
-      await unsaveJob(job.id);
-    } else {
-      await saveJob(job.id);
-    }
-    setSaving(false);
-  };
+export default function JobsPage() {
+  const [filters, setFilters] = useState({});
+  const [page, setPage] = useState(1);
+  const { data, loading, error } = useJobs({ ...filters, page, limit: 20 });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex justify-between items-start gap-4">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">{job.title}</h1>
-              <p className="text-2xl text-gray-600">{job.company}</p>
-            </div>
-            <Button
-              onClick={handleSaveToggle}
-              disabled={saving}
-              variant={isSaved ? "primary" : "outline"}
-            >
-              {isSaved ? "❤️ Saved" : "🤍 Save"}
-            </Button>
+    <div className="min-h-screen bg-cyan-45 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl text-gray-700 font-bold mb-8">
+          Remote Tech Jobs
+        </h1>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <JobFilter onFilterChange={setFilters} />
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-4 text-gray-600">
-            <span>📍 {job.location || "Remote"}</span>
-            <span>🕐 {job.type}</span>
-            <span>⏰ {job.experience}</span>
-            {job.salary && (
-              <span className="text-green-600 font-semibold">
-                💰 ${job.salary.toLocaleString()}/year
-              </span>
+          <div className="lg:col-span-3">
+            {loading ? (
+              <LoadingSpinner />
+            ) : data?.jobs.length ? (
+              <>
+                <div className="flex flex-col space-y-6">
+                  {data.jobs.map((job) => (
+                    <JobCard key={job.id} job={job} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="mt-8 ml-60 flex justify-center gap-2">
+                  {Array.from(
+                    { length: data.pagination.pages },
+                    (_, i) => i + 1,
+                  ).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`px-4 py-2 rounded-lg ${
+                        page === pageNum
+                          ? "bg-blue-600 text-white"
+                          : "border border-gray-300 text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="text-center text-gray-500">No jobs found</p>
             )}
-          </div>
-
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">About the Role</h2>
-            <div
-              className="prose max-w-none"
-              dangerouslySetInnerHTML={{ __html: job.description }}
-            />
-          </div>
-
-          {job.requirements?.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-4">Requirements</h2>
-              <ul className="list-disc list-inside space-y-2">
-                {job.requirements.map((req, i) => (
-                  <li key={i} className="text-gray-600">
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="mt-8">
-            <a
-              href={job.applyUrl || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button className="w-full">Apply Now</Button>
-            </a>
           </div>
         </div>
       </div>
