@@ -19,22 +19,23 @@ export default function DashboardPage() {
     1,
     5,
   );
-  const { savedJobs } = useSavedJobs(); // Pull real time arrays
+  const { saved } = useSavedJobs(); // Pull real time arrays
   const [appliedCount, setAppliedCount] = useState(0);
 
-  useEffect(() => {
-    api
-      .request("/applications")
+useEffect(() => {
+    if (!user) return;
+    api.request("/applications")
       .then((res) => setAppliedCount(res.applications?.length || 0))
       .catch(() => setAppliedCount(0));
-  }, []);
-
+  }, [user]);
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold text-gray-900">
         Welcome back, {user?.name}! 👋
       </h1>
-      <p>Here is a quick look at your application status tracker.</p>
+      <p className="text-gray-900 text-lg font-bold">
+        Here is a quick look at your application status tracker.
+      </p>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -54,7 +55,7 @@ export default function DashboardPage() {
         <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow">
           <p className="text-slate-400 text-sm font-medium">Jobs Saved</p>
           <p className="text-3xl text-white font-bold mt-2">
-            {savedJobs?.length || 0}
+            {saved ? saved.length : 0}
           </p>
         </div>
       </div>
