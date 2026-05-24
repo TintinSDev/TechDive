@@ -178,18 +178,30 @@ class ApiClient {
   }> {
     return this.request(`/jobs/saved?page=${page}&limit=${limit}`);
   }
-  async getApplications() {
+  async getApplications(): Promise<{
+    applications: Array<{
+      id: string;
+      jobTitle: string;
+      company: string;
+      status: "APPLIED" | "INTERVIEWING" | "REJECTED" | "ACCEPTED";
+      appliedAt: string;
+      notes?: string;
+    }>;
+  }> {
     return this.request("/applications");
   }
 
-  async createApplication(jobId: string) {
+  async createApplication(jobId: string): Promise<{ success: boolean }> {
     return this.request("/applications", {
       method: "POST",
       body: JSON.stringify({ jobId }),
     });
   }
 
-  async updateApplicationStatus(id: string, status: string) {
+  async updateApplicationStatus(
+    id: string,
+    status: string,
+  ): Promise<{ success: boolean }> {
     return this.request(`/applications/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
