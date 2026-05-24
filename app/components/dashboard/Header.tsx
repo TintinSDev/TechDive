@@ -1,26 +1,48 @@
 "use client";
 
 import { User } from "@/app/lib/types";
-import { useAuth } from "@/app/lib/hooks";
-import { Button } from "@/app/components/common/Button";
 import Link from "next/link";
 
 interface HeaderProps {
   user: User;
+  onMenuToggle: () => void; // 🔌 Add toggle execution prop
 }
 
-export const Header = ({ user }: HeaderProps) => {
-  const { logout } = useAuth();
+export const Header = ({ user, onMenuToggle }: HeaderProps) => {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="flex justify-between items-center px-6 py-4">
-        <div>
-          <p className="text-sm text-gray-500">Welcome back</p>
-          <p className="text-lg font-semibold text-gray-900">
-            {user.name || user.email.split("@")[0]}
-          </p>
+        {/* Left Area: Hamburger + Greetings */}
+        <div className="flex items-center gap-3">
+          {/* 🍔 Hamburger Trigger Button */}
+          <button
+            onClick={onMenuToggle}
+            className="p-2 -ml-2 rounded-lg text-gray-500 hover:bg-gray-100 md:hidden focus:outline-none"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          <div>
+            <p className="text-sm text-gray-500">Welcome back</p>
+            <p className="text-lg font-semibold text-gray-900">
+              {user.name || user.email.split("@")[0]}
+            </p>
+          </div>
         </div>
 
+        {/* Right Area: Profile Information */}
         <div className="flex items-center gap-6">
           {/* Subscription Badge */}
           {user.subscription && (
@@ -41,9 +63,6 @@ export const Header = ({ user }: HeaderProps) => {
             </div>
           </Link>
         </div>
-        {/* <Button onClick={logout} variant="outline" size="sm">
-          Logout
-        </Button> */}
       </div>
     </header>
   );

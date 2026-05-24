@@ -124,7 +124,7 @@ interface Application {
   id: string;
   jobTitle: string;
   company: string;
-  status: "applied" | "interviewing" | "rejected" | "accepted";
+  status: "APPLIED" | "interviewing" | "rejected" | "accepted";
   appliedAt: string;
   notes?: string;
 }
@@ -140,7 +140,7 @@ export default function ApplicationsPage() {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        const response = await api.request("/jobs/applications");
+        const response = await api.request("/applications");
         setApplications(response.applications || []);
         setError(null);
       } catch (err: any) {
@@ -154,7 +154,32 @@ export default function ApplicationsPage() {
       fetchApplications();
     }
   }, [user]);
+// ... your useEffect hook is right above this
 
+  const handleStatusChange = async (applicationId: string, newStatus: string) => {
+    try {
+      // 1. Tell the backend to update it in PostgreSQL
+      await api.request(`/applications/${applicationId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      // 2. Optimistically update the UI state immediately so the user sees the change
+      setApplications((prev) =>
+        prev.map((app) =>
+          app.id === applicationId
+            ? { ...app, status: newStatus.toUpperCase() as any }
+            : app
+        )
+      );
+    } catch (err: any) {
+      alert("Failed to update status: " + (err.message || "Unknown error"));
+    }
+  };
+
+  // const filtered = applications.filter(
+  //   (app) => filter === "all" || app.status.toLowerCase() === filter,
+  // );
   const filtered = applications.filter(
     (app) => filter === "all" || app.status === filter,
   );
@@ -182,7 +207,7 @@ export default function ApplicationsPage() {
 
       {/* Filter */}
       <div className="mb-6 flex gap-2 flex-wrap">
-        {["all", "applied", "interviewing", "accepted", "rejected"].map(
+        {["all", "APPLIED", "INTERVIEWING", "ACCEPTED", "REJECTED"].map(
           (status) => (
             <button
               key={status}
@@ -205,28 +230,36 @@ export default function ApplicationsPage() {
           {filtered.map((app) => (
             <div
               key={app.id}
-              className="bg-slate-800/50 border border-slate-700 p-6 rounded-lg border-l-4 border-l-blue-600"
+              className="bg-slate-800/50 bg-cyan-400 border text-slate-300 border-slate-700 p-6 rounded-lg border-l-4 border-l-blue-600"
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="text-lg text-white font-semibold">
                     {app.jobTitle}
                   </h3>
-                  <p className="text-slate-400">{app.company}</p>
+                  <p className="text-slate-400 text-white">
+                    {app.company}
+                  </p>
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold capitalize ${statusColors[app.status]}`}
-                >
-                  {app.status}
-                </span>
+        <select
+  value={app.status}
+  onChange={(e) => handleStatusChange(app.id, e.target.value)}
+  className="px-3 py-1.5 rounded-lg text-sm font-semibold capitalize border border-slate-600 bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+>
+  {/* Change the values below to uppercase */}
+  <option value="APPLIED" className="bg-slate-800 text-blue-400">Applied</option>
+  <option value="INTERVIEWING" className="bg-slate-800 text-yellow-400">Interviewing</option>
+  <option value="ACCEPTED" className="bg-slate-800 text-green-400">Accepted</option>
+  <option value="REJECTED" className="bg-slate-800 text-red-400">Rejected</option>
+</select>
               </div>
 
-              <p className="text-sm text-slate-400 mb-2">
+              <p className="text-sm text-white text-slate-400 mb-2">
                 Applied on {new Date(app.appliedAt).toLocaleDateString()}
               </p>
 
               {app.notes && (
-                <p className="text-slate-300 bg-slate-900/50 p-3 rounded">
+                <p className="text-slate-300 text-gray-900 bg-slate-900/50 p-3 rounded">
                   {app.notes}
                 </p>
               )}

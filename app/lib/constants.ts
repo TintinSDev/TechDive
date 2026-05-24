@@ -8,6 +8,12 @@ export const JOB_CATEGORIES = [
   { value: "ml", label: "Machine Learning" },
   { value: "devops", label: "DevOps" },
   { value: "writing", label: "Technical Writing" },
+  { value: "design", label: "Product Design" },
+  { value: "product", label: "Product Management" },
+  { value: "qa", label: "QA & Testing" },
+  { value: "mobile", label: "Mobile Development" },
+  { value: "security", label: "Cybersecurity" },
+  { value: "ai", label: "AI Engineer" },
 ];
 
 export const JOB_TYPES = [
@@ -84,12 +90,12 @@ export const NAVIGATION = [
 export const DASHBOARD_NAVIGATION = [
   {
     name: "Dashboard",
-    href: "/",
+    href: "/dashboard",
     icon: "📊",
   },
   {
-    name: "Recommended Jobs",
-    href: "/dashboard/recommendations",
+    name: "Remote Jobs",
+    href: "/dashboard/jobs",
     icon: "⭐",
   },
   {

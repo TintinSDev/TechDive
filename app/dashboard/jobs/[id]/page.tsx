@@ -4,6 +4,7 @@ import { useJob, useSavedJobs } from "@/app/lib/hooks";
 import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 import { Button } from "@/app/components/common/Button";
 import { useState } from "react";
+import { api } from "@/app/lib/api";
 
 export default function JobDetailPage() {
   const params = useParams();
@@ -11,6 +12,7 @@ export default function JobDetailPage() {
   const { job, loading, error } = useJob(id);
   const { isJobSaved, saveJob, unsaveJob } = useSavedJobs();
   const [saving, setSaving] = useState(false);
+  const [applying, setApplying] = useState(false);
 
   if (loading) return <LoadingSpinner />;
   if (error || !job) return <p className="text-red-600">Job not found</p>;
@@ -26,7 +28,24 @@ export default function JobDetailPage() {
     }
     setSaving(false);
   };
+  const handleApply = async (e: React.MouseEvent) => {
+    // 1. If there's no url or we are already processing, do nothing
+    if (!job.applyUrl || applying) return;
 
+    try {
+      setApplying(true);
+
+      // 2. Fire and hit your Express endpoint via api.ts wrapper
+      await api.request("/applications", {
+        method: "POST",
+        body: JSON.stringify({ jobId: job.id }),
+      });
+    } catch (err) {
+      console.error("Failed to log job application state:", err);
+    } finally {
+      setApplying(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -84,17 +103,29 @@ export default function JobDetailPage() {
           )}
 
           <div className="mt-8">
-            {job.applyUrl ? (
-              <a href={job.applyUrl} target="_blank" rel="noopener noreferrer">
-                <Button className="w-full text-green-600 border border-green-600 hover:bg-green-600 hover:text-white">
-                  Apply Now
+            <div className="mt-8">
+              {job.applyUrl ? (
+                <a
+                  href={job.applyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleApply} // Hook into the click event
+                >
+                  <Button
+                    disabled={applying}
+                    className="w-full text-green-600 border border-green-600 hover:bg-green-600 hover:text-white"
+                  >
+                    {applying
+                      ? "Connecting to application page..."
+                      : "Apply Now"}
+                  </Button>
+                </a>
+              ) : (
+                <Button className="w-full" disabled>
+                  No Application Link Available
                 </Button>
-              </a>
-            ) : (
-              <Button className="w-full" disabled>
-                No Application Link Available
-              </Button>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

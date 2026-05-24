@@ -178,30 +178,23 @@ class ApiClient {
   }> {
     return this.request(`/jobs/saved?page=${page}&limit=${limit}`);
   }
-  async getApplications(): Promise<{
-    applications: JobApplication[];
-  }> {
-    return this.request(
-      "/jobs/applications", // You may need to create this endpoint in backend
-    );
-  }
+ async getApplications() {
+  return this.request("/applications");
+}
 
-  async createApplication(jobId: string): Promise<{ success: boolean }> {
-    return this.request("/jobs/applications", {
-      method: "POST",
-      body: JSON.stringify({ jobId }),
-    });
-  }
+async createApplication(jobId: string) {
+  return this.request("/applications", {
+    method: "POST",
+    body: JSON.stringify({ jobId }),
+  });
+}
 
-  async updateApplicationStatus(
-    applicationId: string,
-    status: string,
-  ): Promise<{ success: boolean }> {
-    return this.request(`/jobs/applications/${applicationId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    });
-  }
+async updateApplicationStatus(id: string, status: string) {
+  return this.request(`/applications/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
   // ============================================================
   // Recommendations Endpoints
   // ============================================================

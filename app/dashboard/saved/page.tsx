@@ -8,7 +8,7 @@ export default function SavedJobsPage() {
   const { saved, loading } = useSavedJobs();
 
   return (
-    <div className="max-w-xl rounded-lg shadow-lg p-8 mx-auto">
+    <div className="w-full rounded-lg shadow-lg p-8 mx-auto">
       <h1 className="text-3xl text-cyan-700 font-bold mb-8">Saved Jobs</h1>
 
       {loading ? (
