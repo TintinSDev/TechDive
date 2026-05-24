@@ -140,7 +140,7 @@ export default function ApplicationsPage() {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        const response = await api.request("/applications");
+        const response = await api.getApplications();
         setApplications(response.applications || []);
         setError(null);
       } catch (err: any) {
