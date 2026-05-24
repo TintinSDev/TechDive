@@ -50,9 +50,9 @@ export const Navbar: React.FC = () => {
                   Login
                 </Button>
               </Link>
-              <Link href="/auth/signup">
+              {/* <Link href="/auth/signup">
                 <Button size="sm">Sign Up</Button>
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
