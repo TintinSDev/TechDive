@@ -124,7 +124,7 @@ interface Application {
   id: string;
   jobTitle: string;
   company: string;
-  status: "APPLIED" | "interviewing" | "rejected" | "accepted";
+  status: "APPLIED" | "INTERVIEWING" | "REJECTED" | "ACCEPTED";
   appliedAt: string;
   notes?: string;
 }
