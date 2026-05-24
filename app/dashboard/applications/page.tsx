@@ -154,9 +154,12 @@ export default function ApplicationsPage() {
       fetchApplications();
     }
   }, [user]);
-// ... your useEffect hook is right above this
+  // ... your useEffect hook is right above this
 
-  const handleStatusChange = async (applicationId: string, newStatus: string) => {
+  const handleStatusChange = async (
+    applicationId: string,
+    newStatus: string,
+  ) => {
     try {
       // 1. Tell the backend to update it in PostgreSQL
       await api.request(`/applications/${applicationId}`, {
@@ -169,8 +172,8 @@ export default function ApplicationsPage() {
         prev.map((app) =>
           app.id === applicationId
             ? { ...app, status: newStatus.toUpperCase() as any }
-            : app
-        )
+            : app,
+        ),
       );
     } catch (err: any) {
       alert("Failed to update status: " + (err.message || "Unknown error"));
@@ -237,21 +240,39 @@ export default function ApplicationsPage() {
                   <h3 className="text-lg text-white font-semibold">
                     {app.jobTitle}
                   </h3>
-                  <p className="text-slate-400 text-white">
-                    {app.company}
-                  </p>
+                  <p className="text-slate-400 text-white">{app.company}</p>
                 </div>
-        <select
-  value={app.status}
-  onChange={(e) => handleStatusChange(app.id, e.target.value)}
-  className="px-3 py-1.5 rounded-lg text-sm font-semibold capitalize border border-slate-600 bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
->
-  {/* Change the values below to uppercase */}
-  <option value="APPLIED" className="bg-slate-800 text-blue-400">Applied</option>
-  <option value="INTERVIEWING" className="bg-slate-800 text-yellow-400">Interviewing</option>
-  <option value="ACCEPTED" className="bg-slate-800 text-green-400">Accepted</option>
-  <option value="REJECTED" className="bg-slate-800 text-red-400">Rejected</option>
-</select>
+                <select
+                  value={app.status}
+                  onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                  className="px-3 py-1.5 rounded-lg text-sm font-semibold capitalize border border-slate-600 bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                >
+                  {/* Change the values below to uppercase */}
+                  <option
+                    value="APPLIED"
+                    className="bg-slate-800 text-blue-400"
+                  >
+                    Applied
+                  </option>
+                  <option
+                    value="INTERVIEWING"
+                    className="bg-slate-800 text-yellow-400"
+                  >
+                    Interviewing
+                  </option>
+                  <option
+                    value="ACCEPTED"
+                    className="bg-slate-800 text-green-400"
+                  >
+                    Accepted
+                  </option>
+                  <option
+                    value="REJECTED"
+                    className="bg-slate-800 text-red-400"
+                  >
+                    Rejected
+                  </option>
+                </select>
               </div>
 
               <p className="text-sm text-white text-slate-400 mb-2">

@@ -17,7 +17,7 @@ interface FetchOptions extends RequestInit {
 }
 
 class ApiClient {
-  private async request<T>(
+  public async request<T>(
     endpoint: string,
     options?: FetchOptions,
   ): Promise<T> {
@@ -178,23 +178,23 @@ class ApiClient {
   }> {
     return this.request(`/jobs/saved?page=${page}&limit=${limit}`);
   }
- async getApplications() {
-  return this.request("/applications");
-}
+  async getApplications() {
+    return this.request("/applications");
+  }
 
-async createApplication(jobId: string) {
-  return this.request("/applications", {
-    method: "POST",
-    body: JSON.stringify({ jobId }),
-  });
-}
+  async createApplication(jobId: string) {
+    return this.request("/applications", {
+      method: "POST",
+      body: JSON.stringify({ jobId }),
+    });
+  }
 
-async updateApplicationStatus(id: string, status: string) {
-  return this.request(`/applications/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify({ status }),
-  });
-}
+  async updateApplicationStatus(id: string, status: string) {
+    return this.request(`/applications/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  }
   // ============================================================
   // Recommendations Endpoints
   // ============================================================
