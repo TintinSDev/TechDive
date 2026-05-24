@@ -27,7 +27,7 @@ export default function ProfilePage() {
         location: user.location || "",
         skills: user.skills || [],
         experience: user.experience || "",
-        preferredRole: user.preferredRole || [],
+        preferredRole: (user as any).preferredRole || user.preferredRoles || [],
       });
     }
   }, [user]);
