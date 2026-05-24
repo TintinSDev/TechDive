@@ -23,11 +23,16 @@ export default function DashboardPage() {
   const [appliedCount, setAppliedCount] = useState(0);
 
 useEffect(() => {
-    if (!user) return;
-    api.request("/applications")
-      .then((res) => setAppliedCount(res.applications?.length || 0))
-      .catch(() => setAppliedCount(0));
-  }, [user]);
+  if (!user) return;
+  api.getApplications()
+    .then((res) => {
+      setAppliedCount(res.applications?.length || 0);
+    })
+    .catch((err) => {
+      console.error("Error loading applied stats:", err);
+      setAppliedCount(0);
+    });
+}, [user]);
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold text-gray-900">
