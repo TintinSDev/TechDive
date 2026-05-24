@@ -20,7 +20,7 @@ export default function SavedJobsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500">You haven't saved any jobs yet</p>
+        <p className="text-gray-500">You haven&apos;t saved any jobs yet</p>
       )}
     </div>
   );

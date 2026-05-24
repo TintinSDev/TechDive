@@ -374,7 +374,9 @@ export default function LandingPage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-slate-300 mb-4">"{testimonial.text}"</p>
+                <p className="text-slate-300 mb-4">
+                  &apos;{testimonial.text}&apos;
+                </p>
                 <div>
                   <p className="text-white font-semibold">{testimonial.name}</p>
                   <p className="text-slate-400 text-sm">{testimonial.role}</p>
