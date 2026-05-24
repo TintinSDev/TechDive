@@ -33,7 +33,7 @@ export const Header = ({ user }: HeaderProps) => {
           )}
 
           {/* User Avatar */}
-          <Link href="/profile">
+          <Link href="/dashboard/profile">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center cursor-pointer hover:shadow-lg transition">
               <span className="text-white font-bold text-sm">
                 {user.name?.charAt(0) || user.email.charAt(0).toUpperCase()}
@@ -41,9 +41,9 @@ export const Header = ({ user }: HeaderProps) => {
             </div>
           </Link>
         </div>
-        <Button onClick={logout} variant="outline" size="sm">
+        {/* <Button onClick={logout} variant="outline" size="sm">
           Logout
-        </Button>
+        </Button> */}
       </div>
     </header>
   );

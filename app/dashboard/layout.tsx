@@ -1,22 +1,25 @@
 "use client";
 
-import { ReactNode } from "react";
 import { useAuth } from "@/app/lib/hooks";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 import { Sidebar } from "@/app/components/dashboard/Sidebar";
 import { Header } from "@/app/components/dashboard/Header";
+import { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, loading, isAuthenticated } = useAuth();
   const router = useRouter();
 
-  if (loading) return <LoadingSpinner />;
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.push("/auth/login"); // ✅ Correct - inside useEffect
+    }
+  }, [loading, isAuthenticated, router]);
 
-  if (!isAuthenticated) {
-    router.push("/login");
-    return null;
-  }
+  if (loading) return <LoadingSpinner />;
+  if (!isAuthenticated) return null;
 
   return (
     <div className="flex h-screen bg-gray-100">

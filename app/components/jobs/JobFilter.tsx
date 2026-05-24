@@ -51,8 +51,8 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200 sticky top-20">
-      <h3 className="text-lg font-semibold mb-4">Filters</h3>
+    <div className="bg-white w-full p-6 rounded-lg border border-gray-600 sticky top-20">
+      <h3 className="text-lg text-gray-800 font-semibold mb-4">Filters</h3>
 
       {/* Search */}
       <div className="mb-4">
@@ -64,7 +64,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Job title, company..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 text-gray-700 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -76,7 +76,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Categories</option>
           {JOB_CATEGORIES.map((cat) => (
@@ -95,7 +95,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Types</option>
           {JOB_TYPES.map((t) => (
@@ -114,7 +114,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
         <select
           value={experience}
           onChange={(e) => setExperience(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Levels</option>
           {EXPERIENCE_LEVELS.map((level) => (
@@ -130,26 +130,26 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Salary Range (USD)
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-2 text-gray-700">
           <input
             type="number"
             value={minSalary}
             onChange={(e) => setMinSalary(e.target.value)}
             placeholder="Min"
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w 1/2 min-w-0 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="number"
             value={maxSalary}
             onChange={(e) => setMaxSalary(e.target.value)}
             placeholder="Max"
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w 1/2 min-w-0 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 text-gray-700">
         <Button onClick={handleApplyFilters} className="flex-1">
           Apply
         </Button>

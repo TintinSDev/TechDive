@@ -28,13 +28,10 @@ export default function ProfilePage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl bg-cyan-900 rounded-lg shadow-lg p-8 mx-auto">
       <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-white p-6 rounded-lg shadow"
-      >
+      <form onSubmit={handleSubmit} className="space-y-6 p-6 rounded-lg shadow">
         {/* Name */}
         <div>
           <label className="block text-sm font-medium mb-2">Name</label>
@@ -80,7 +77,7 @@ export default function ProfilePage() {
             onChange={(e) =>
               setFormData({ ...formData, experience: e.target.value })
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full px-4 py-2 text-cyan-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           >
             <option value="">Select level</option>
             <option value="entry-level">Entry Level</option>

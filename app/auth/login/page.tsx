@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login } from "@/app/lib/auth";
 import { Button } from "@/app/components/common/Button";
+import { Briefcase } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,16 +22,18 @@ export default function LoginPage() {
     const result = await login(email, password);
 
     if (result.success) {
-      router.push("/");
+      router.push("/dashboard");
     } else {
       setError(result.error);
     }
 
     setLoading(false);
   };
-
+  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+    <Briefcase className="w-5 h-5 text-white" />
+  </div>;
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
+    <div className="bg-cyan rounded-lg shadow-lg p-8">
       <h1 className="text-3xl font-bold text-center mb-8">Login to Techdive</h1>
 
       {error && (
@@ -69,8 +72,17 @@ export default function LoginPage() {
 
       <p className="text-center mt-6 text-gray-600">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-blue-600 hover:underline">
+        <Link href="/auth/signup" className="text-blue-600 hover:underline">
           Sign up
+        </Link>
+      </p>
+      <p className="text-center mt-6 text-gray-600">
+        Forgot your password?{" "}
+        <Link
+          href="/auth/forgot-password"
+          className="text-blue-600 hover:underline"
+        >
+          Reset it
         </Link>
       </p>
     </div>

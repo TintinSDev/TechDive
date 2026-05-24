@@ -71,12 +71,12 @@ export const PRICING_PLANS = [
 export const NAVIGATION = [
   {
     name: "Browse Jobs",
-    href: "/jobs",
+    href: "/dashboard/remotejobs",
     requiresAuth: false,
   },
   {
     name: "Pricing",
-    href: "/pricing",
+    href: "/dashboard/pricing",
     requiresAuth: false,
   },
 ];
@@ -89,32 +89,32 @@ export const DASHBOARD_NAVIGATION = [
   },
   {
     name: "Recommended Jobs",
-    href: "/",
+    href: "/dashboard/recommendations",
     icon: "⭐",
   },
   {
     name: "Saved Jobs",
-    href: "/jobs",
+    href: "/dashboard/saved",
     icon: "❤️",
   },
   {
     name: "Applications",
-    href: "/applications",
+    href: "/dashboard/applications",
     icon: "📬",
   },
   {
     name: "Profile",
-    href: "/profile",
+    href: "/dashboard/profile",
     icon: "👤",
   },
   {
     name: "Preferences",
-    href: "/preferences",
+    href: "/dashboard/preferences",
     icon: "🔔",
   },
   {
     name: "Settings",
-    href: "/settings",
+    href: "/dashboard/settings",
     icon: "⚙️",
   },
 ];

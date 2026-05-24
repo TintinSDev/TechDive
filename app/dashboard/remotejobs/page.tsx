@@ -14,7 +14,9 @@ export default function JobsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Remote Tech Jobs</h1>
+        <h1 className="text-4xl text-gray-700 font-bold mb-8">
+          Remote Tech Jobs
+        </h1>
 
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">

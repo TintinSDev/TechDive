@@ -34,7 +34,7 @@ export default function SignupPage() {
     const result = await signup(email, password, name);
 
     if (result.success) {
-      router.push("/");
+      router.push("/dashboard");
     } else {
       setError(result.error);
     }
@@ -43,8 +43,8 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Create Account</h1>
+    <div className="bg-cyan  rounded-lg shadow-lg p-8 max-w-md mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-8 ">Create Account</h1>
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
@@ -105,7 +105,7 @@ export default function SignupPage() {
 
       <p className="text-center mt-6 text-gray-600">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 hover:underline">
+        <Link href="/auth/login" className="text-blue-600 hover:underline">
           Login
         </Link>
       </p>

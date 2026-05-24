@@ -3,25 +3,38 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { login } from "@/app/lib/auth";
+import { signup } from "@/app/lib/auth";
 import { Button } from "@/app/components/common/Button";
 
-export const LoginForm: React.FC = () => {
+export default function SignupForm() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
     setLoading(true);
 
-    const result = await login(email, password);
+    const result = await signup(email, password, name);
 
     if (result.success) {
-      router.push("/");
+      router.push("/dashboard");
     } else {
       setError(result.error);
     }
@@ -30,11 +43,8 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
-      <h1 className="text-3xl font-bold text-center mb-2">Welcome Back</h1>
-      <p className="text-center text-gray-600 mb-8">
-        Login to your Techdive account
-      </p>
+    <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-8 ">Create Account</h1>
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
@@ -44,16 +54,23 @@ export const LoginForm: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">
-            Email Address
-          </label>
+          <label className="block text-sm font-medium mb-2">Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           />
         </div>
 
@@ -64,44 +81,34 @@ export const LoginForm: React.FC = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           />
         </div>
 
-        <div className="flex justify-between items-center">
-          <label className="flex items-center">
-            <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" />
-            <span className="ml-2 text-sm text-gray-600">Remember me</span>
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Confirm Password
           </label>
-          <Link
-            href="/forgot-password"
-            className="text-sm text-blue-600 hover:underline"
-          >
-            Forgot password?
-          </Link>
+          <input
+            type="password"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
         </div>
 
-        <Button loading={loading} className="w-full" size="lg">
-          Login
+        <Button loading={loading} className="w-full">
+          Create Account
         </Button>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <p className="text-center text-gray-600">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            Sign up
-          </Link>
-        </p>
-      </div>
-
-      <div className="mt-6 text-center text-xs text-gray-500">
-        <p>Demo account: demo@techdive.com / Demo123456</p>
-      </div>
+      <p className="text-center mt-6 text-gray-600">
+        Already have an account?{" "}
+        <Link href="/auth/login" className="text-blue-600 hover:underline">
+          Login
+        </Link>
+      </p>
     </div>
   );
-};
+}

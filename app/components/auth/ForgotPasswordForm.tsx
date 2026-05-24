@@ -34,7 +34,7 @@ export const ForgotPasswordForm: React.FC = () => {
           Click the link in the email to reset your password. The link expires
           in 24 hours.
         </p>
-        <Link href="/login">
+        <Link href="/auth/login">
           <Button className="w-full">Back to Login</Button>
         </Link>
       </div>
@@ -73,7 +73,7 @@ export const ForgotPasswordForm: React.FC = () => {
         <p className="text-center text-gray-600">
           Remember your password?{" "}
           <Link
-            href="/login"
+            href="/auth/login"
             className="text-blue-600 font-semibold hover:underline"
           >
             Back to Login

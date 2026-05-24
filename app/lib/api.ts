@@ -1,6 +1,13 @@
 // app/lib/api.ts
 
-import { AuthResponse, JobsResponse, User, Job, SavedJob } from "./types";
+import {
+  AuthResponse,
+  JobsResponse,
+  User,
+  Job,
+  SavedJob,
+  JobApplication,
+} from "./types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -42,23 +49,32 @@ class ApiClient {
     return response.json();
   }
 
-  private getToken(): string | null {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("auth_token");
-    }
-    return null;
-  }
-
   private setToken(token: string): void {
     if (typeof window !== "undefined") {
-      localStorage.setItem("auth_token", token);
+      // Save to cookies instead of localStorage
+      document.cookie = `auth_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}`;
     }
   }
 
   private removeToken(): void {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("auth_token");
+      document.cookie = `auth_token=; path=/; max-age=0`;
     }
+  }
+
+  private getToken(): string | null {
+    if (typeof window !== "undefined") {
+      const name = "auth_token=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArray = decodedCookie.split(";");
+      for (let cookie of cookieArray) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(name) === 0) {
+          return cookie.substring(name.length, cookie.length);
+        }
+      }
+    }
+    return null;
   }
 
   // ============================================================
@@ -162,7 +178,30 @@ class ApiClient {
   }> {
     return this.request(`/jobs/saved?page=${page}&limit=${limit}`);
   }
+  async getApplications(): Promise<{
+    applications: JobApplication[];
+  }> {
+    return this.request(
+      "/jobs/applications", // You may need to create this endpoint in backend
+    );
+  }
 
+  async createApplication(jobId: string): Promise<{ success: boolean }> {
+    return this.request("/jobs/applications", {
+      method: "POST",
+      body: JSON.stringify({ jobId }),
+    });
+  }
+
+  async updateApplicationStatus(
+    applicationId: string,
+    status: string,
+  ): Promise<{ success: boolean }> {
+    return this.request(`/jobs/applications/${applicationId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  }
   // ============================================================
   // Recommendations Endpoints
   // ============================================================

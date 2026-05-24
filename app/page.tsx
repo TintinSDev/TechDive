@@ -1,7 +1,9 @@
 "use client";
 import { galada } from "@/app/lib/fonts";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/app/lib/hooks";
 import {
   ChevronRight,
   Briefcase,
@@ -10,51 +12,68 @@ import {
   Users,
   Check,
   ArrowRight,
+  Star,
 } from "lucide-react";
+import { Button } from "@/app/components/common/Button";
+import { Navbar } from "@/app/components/common/Navbar";
+//import { Footer } from "@/components/common/Footer";
+import { api } from "@/app/lib/api";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
 
-  const handleSubscribe = async (e: React.FormEvent) => {
+  // Handle email newsletter signup
+  const handleNewsletterSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
-    // Call your backend to create checkout session
-    try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, plan: selectedPlan }),
-      });
+    setLoading(true);
+    setError("");
 
-      if (response.ok) {
+    try {
+      // If user is logged in, update preferences
+      if (isAuthenticated) {
+        await api.updateEmailPreferences({
+          emailNotifications: true,
+          notificationFrequency: "daily",
+        });
         setSubmitted(true);
         setEmail("");
-        setTimeout(() => setSubmitted(false), 3000);
+      } else {
+        // If not logged in, redirect to signup with email pre-filled
+        router.push(`/signup?email=${encodeURIComponent(email)}`);
       }
-    } catch (error) {
-      console.error("Signup error:", error);
+    } catch (err) {
+      setError("Failed to subscribe. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+
+    // Reset submitted message after 3 seconds
+    setTimeout(() => setSubmitted(false), 3000);
+  };
+
+  // Handle plan selection and redirect to pricing or signup
+  const handleSelectPlan = (plan: "pro" | "enterprise") => {
+    setSelectedPlan(plan);
+    if (isAuthenticated) {
+      router.push("/pricing");
+    } else {
+      router.push(`/signup?plan=${plan}`);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md border-b border-slate-700 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-white">TechDive</span>
-          </div>
-          <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-            Get Started
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -80,10 +99,10 @@ export default function LandingPage() {
           </p>
 
           {/* CTA Form */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col gap-4 justify-center mb-12">
             <form
-              onSubmit={handleSubscribe}
-              className="flex flex-col sm:flex-row gap-3 w-full max-w-lg"
+              onSubmit={handleNewsletterSignup}
+              className="flex flex-col sm:flex-row gap-3 w-full max-w-lg mx-auto"
             >
               <input
                 type="email"
@@ -93,22 +112,36 @@ export default function LandingPage() {
                 className="flex-1 px-6 py-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 required
               />
-              <button
+              <Button
                 type="submit"
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center gap-2 justify-center"
+                loading={loading}
+                className="flex items-center gap-2 justify-center whitespace-nowrap"
               >
                 Get Started Free <ArrowRight className="w-4 h-4" />
-              </button>
+              </Button>
             </form>
+
+            {error && (
+              <p className="text-red-400 text-sm max-w-lg mx-auto">{error}</p>
+            )}
+
+            {submitted && (
+              <p className="text-green-400 text-sm max-w-lg mx-auto">
+                ✓ Check your email to verify!
+              </p>
+            )}
           </div>
 
-          {submitted && (
-            <p className="text-green-400 mb-8">✓ Check your email to verify!</p>
-          )}
-
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-400 text-sm mb-12">
             No credit card required. Start getting job alerts in 30 seconds.
           </p>
+
+          {/* Browse Jobs CTA */}
+          {/* <Link href="/dashboard/remotejobs">
+            <Button variant="outline" size="lg">
+              Browse {isAuthenticated ? "All" : "Sample"} Jobs
+            </Button>
+          </Link> */}
         </div>
 
         {/* Hero Image */}
@@ -117,14 +150,18 @@ export default function LandingPage() {
             <div className="aspect-video bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center">
               <div className="text-center">
                 <Briefcase className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
-                <p className="text-slate-400">Dashboard Preview</p>
+                <p className="text-slate-400">
+                  {isAuthenticated
+                    ? "Go to Dashboard →"
+                    : "Dashboard Preview (Sign up to access)"}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Job Categories */}
+      {/* Job Categories - Linked to Filtering */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center">
@@ -137,23 +174,28 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              { icon: "⚙️", title: "Backend Engineering", count: "340" },
-              { icon: "🎨", title: "Frontend Engineering", count: "280" },
-              { icon: "🔗", title: "Full-Stack", count: "210" },
-              { icon: "📊", title: "Data Science", count: "160" },
-              { icon: "🤖", title: "Machine Learning", count: "95" },
-              { icon: "✍️", title: "Technical Writing", count: "85" },
+              { icon: "⚙️", title: "Backend Engineering", category: "backend" },
+              {
+                icon: "🎨",
+                title: "Frontend Engineering",
+                category: "frontend",
+              },
+              { icon: "🔗", title: "Full-Stack", category: "full-stack" },
+              { icon: "📊", title: "Data Science", category: "data-science" },
+              { icon: "🤖", title: "Machine Learning", category: "ml" },
+              { icon: "✍️", title: "Technical Writing", category: "writing" },
             ].map((job) => (
-              <div
-                key={job.title}
-                className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-blue-500/50 transition cursor-pointer group"
-              >
-                <div className="text-3xl mb-3">{job.icon}</div>
-                <h3 className="text-white font-semibold mb-2 group-hover:text-blue-400">
-                  {job.title}
-                </h3>
-                <p className="text-slate-400 text-sm">{job.count} jobs</p>
-              </div>
+              <Link key={job.title} href={`/jobs?category=${job.category}`}>
+                <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-blue-500/50 hover:bg-slate-800/80 transition cursor-pointer group h-full">
+                  <div className="text-3xl mb-3">{job.icon}</div>
+                  <h3 className="text-white font-semibold mb-2 group-hover:text-blue-400">
+                    {job.title}
+                  </h3>
+                  <p className="text-slate-400 text-sm">
+                    Explore opportunities →
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -163,7 +205,7 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center">
-            Why Choose TechDive?
+            Why Choose Techdive?
           </h2>
           <p className="text-slate-400 text-center mb-16">
             Built by engineers, for engineers.
@@ -181,7 +223,7 @@ export default function LandingPage() {
                 icon: <Mail className="w-8 h-8" />,
                 title: "Smart Email Alerts",
                 description:
-                  "Personalized job recommendations based on your skills and preferences.",
+                  "Personalized job recommendations based on your skills and preferences. Enable in settings.",
               },
               {
                 icon: <Users className="w-8 h-8" />,
@@ -198,7 +240,7 @@ export default function LandingPage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="p-8 bg-slate-800/50 border border-slate-700 rounded-lg"
+                className="p-8 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-blue-500/50 transition"
               >
                 <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4 text-blue-400">
                   {feature.icon}
@@ -213,7 +255,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* Pricing - Fully Connected to Checkout */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center">
@@ -223,7 +265,7 @@ export default function LandingPage() {
             Choose the plan that works for you. Cancel anytime.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-10xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {/* Free Plan */}
             <div className="p-8 bg-slate-800/50 border border-slate-700 rounded-lg">
               <h3 className="text-white text-2xl font-bold mb-2">Free</h3>
@@ -247,9 +289,16 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <button className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition font-semibold">
-                Start Free
-              </button>
+              <Link
+                href={
+                  isAuthenticated ? "/dashboard/remotejobs" : "/auth/signup"
+                }
+                className="w-full block"
+              >
+                <Button className="w-full" variant="secondary">
+                  {isAuthenticated ? "Go to Dashboard" : "Start Free"}
+                </Button>
+              </Link>
             </div>
 
             {/* Pro Plan */}
@@ -281,16 +330,10 @@ export default function LandingPage() {
                 ))}
               </ul>
               <button
-                onClick={() => {
-                  setSelectedPlan("pro");
-                  const emailInput = document.querySelector<HTMLInputElement>(
-                    'input[type="email"]',
-                  );
-                  emailInput?.focus();
-                }}
-                className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold"
+                onClick={() => handleSelectPlan("pro")}
+                className="w-full"
               >
-                Start 7-Day Trial
+                <Button className="w-full">Start 7-Day Trial</Button>
               </button>
             </div>
 
@@ -320,17 +363,21 @@ export default function LandingPage() {
                 ))}
               </ul>
               <button
-                onClick={() => {
-                  setSelectedPlan("enterprise");
-                  document
-                    .querySelector<HTMLInputElement>('input[type="email"]')
-                    ?.focus();
-                }}
-                className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition font-semibold"
+                onClick={() => handleSelectPlan("enterprise")}
+                className="w-full"
               >
-                Start 7-Day Trial
+                <Button className="w-full" variant="secondary">
+                  Start 7-Day Trial
+                </Button>
               </button>
             </div>
+          </div>
+
+          {/* View Full Pricing */}
+          <div className="text-center mt-12">
+            <Link href="/pricing">
+              <Button variant="outline">View Full Pricing & FAQ</Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -347,35 +394,39 @@ export default function LandingPage() {
               {
                 name: "Sarah Chen",
                 role: "Backend Engineer",
-                company: "Previously Freelance",
-                text: "Found my dream role at Stripe in just 2 weeks. TechDive's alerts were insanely relevant.",
+                company: "Now at Stripe",
+                text: "Found my dream role at Stripe in just 2 weeks. Techdive's alerts were insanely relevant.",
+                rating: 5,
               },
               {
                 name: "Alex Okonkwo",
                 role: "ML Engineer",
                 company: "Now at OpenAI",
                 text: "Got 5 interview offers in one week. The quality of jobs here is unmatched.",
+                rating: 5,
               },
               {
                 name: "Maria Rodriguez",
                 role: "Full-Stack Dev",
                 company: "Now at Figma",
-                text: "Switched from traditional job boards. TechDive saves me hours every week.",
+                text: "Switched from traditional job boards. Techdive saves me hours every week.",
+                rating: 5,
               },
             ].map((testimonial, i) => (
               <div
                 key={i}
-                className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg"
+                className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-blue-500/50 transition"
               >
                 <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <span key={j} className="text-yellow-400">
-                      ★
-                    </span>
+                  {[...Array(testimonial.rating)].map((_, j) => (
+                    <Star
+                      key={j}
+                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
-                <p className="text-slate-300 mb-4">
-                  &apos;{testimonial.text}&apos;
+                <p className="text-slate-300 mb-4 italic">
+                  &quot;{testimonial.text}&quot;
                 </p>
                 <div>
                   <p className="text-white font-semibold">{testimonial.name}</p>
@@ -398,9 +449,19 @@ export default function LandingPage() {
             Join thousands of engineers landing their dream remote jobs. No
             spam, just great opportunities.
           </p>
-          <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center gap-2 mx-auto">
-            Get Started Free <ChevronRight className="w-5 h-5" />
-          </button>
+          {isAuthenticated ? (
+            <Link href="/dashboard">
+              <Button size="lg" className="flex items-center gap-2 mx-auto">
+                Go to Dashboard <ChevronRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/signup">
+              <Button size="lg" className="flex items-center gap-2 mx-auto">
+                Get Started Free <ChevronRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          )}
         </div>
       </section>
 

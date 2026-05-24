@@ -19,7 +19,12 @@ export function useAuth() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("auth_token");
+        // Read token from cookies
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("auth_token="))
+          ?.split("=")[1];
+
         if (token) {
           const userData = await api.getMe();
           setUser(userData);
@@ -27,7 +32,6 @@ export function useAuth() {
         }
       } catch (error) {
         console.error("Auth check failed:", error);
-        localStorage.removeItem("auth_token");
       } finally {
         setLoading(false);
       }
@@ -37,10 +41,10 @@ export function useAuth() {
   }, []);
 
   const logout = useCallback(async () => {
-    localStorage.removeItem("auth_token");
+    document.cookie = "auth_token=; path=/; max-age=0";
     setUser(null);
     setIsAuthenticated(false);
-    router.push("/login");
+    router.push("/auth/login");
   }, [router]);
 
   return {

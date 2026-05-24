@@ -21,26 +21,26 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
+    <div className="bg-cyan rounded-lg shadow-lg p-8">
       <h1 className="text-3xl font-bold text-center mb-8">Reset Password</h1>
 
       {submitted ? (
         <div className="text-center">
           <div className="text-6xl mb-4">📧</div>
           <h2 className="text-2xl font-bold mb-2">Check your email</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-white-600 mb-6">
             We&apos;ve sent a password reset link to <strong>{email}</strong>
           </p>
-          <p className="text-gray-600 mb-6">
+          <p className="text-white-600 mb-6">
             Click the link in the email to reset your password.
           </p>
-          <Link href="/login">
+          <Link href="/auth/login">
             <Button>Back to Login</Button>
           </Link>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-gray-600 mb-6">
+          <p className="text-white-600 mb-6">
             Enter your email address and we&apos;ll send you a link to reset
             your password.
           </p>
@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2 border border-white-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -60,9 +60,9 @@ export default function ForgotPasswordPage() {
             Send Reset Link
           </Button>
 
-          <p className="text-center text-gray-600">
+          <p className="text-center text-white-600">
             Remember your password?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
+            <Link href="/auth/login" className="text-blue-600 hover:underline">
               Login
             </Link>
           </p>

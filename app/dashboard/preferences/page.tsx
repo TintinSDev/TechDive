@@ -34,7 +34,7 @@ export default function PreferencesPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl bg-cyan-900 rounded-lg shadow-lg p-8 mx-auto">
       <h1 className="text-3xl font-bold mb-8">Email Preferences</h1>
 
       <form
@@ -114,16 +114,12 @@ export default function PreferencesPage() {
             <span className="ml-3 text-gray-700">Job application updates</span>
           </label>
           <label className="flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-4 h-4 text-blue-600"
-            />
+            <input type="checkbox" className="w-4 h-4 text-blue-600" />
             <span className="ml-3 text-gray-700">Platform news and tips</span>
           </label>
         </div>
 
-        <Button loading={saving} className="w-full">
+        <Button loading={saving} className="w-full text-grey-700">
           Save Preferences
         </Button>
       </form>

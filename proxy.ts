@@ -8,21 +8,21 @@ export function proxy(request: NextRequest) {
   // Public paths that don't need authentication
   const publicPaths = [
     "/",
-    "/jobs",
-    "/pricing",
-    "/login",
-    "/signup",
-    "/forgot-password",
+    "/dashboard/jobs",
+    "/dashboard/pricing",
+    "/auth/login",
+    "/auth/signup",
+    "/auth/forgot-password",
   ];
   const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
 
   // Dashboard paths that require authentication
   const dashboardPaths = [
     "/dashboard",
-    "/profile",
-    "/preferences",
-    "/settings",
-    "/applications",
+    "/dashboard/profile",
+    "/dashboard/preferences",
+    "/dashboard/settings",
+    "/dashboard/applications",
   ];
   const isDashboardPath = dashboardPaths.some((path) =>
     pathname.startsWith(path),
@@ -30,10 +30,10 @@ export function proxy(request: NextRequest) {
 
   // Check authentication
   if (isDashboardPath && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if ((pathname === "/login" || pathname === "/signup") && token) {
+  if ((pathname === "/auth/login" || pathname === "/auth/signup") && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login } from "@/app/lib/auth";
 import { Button } from "@/app/components/common/Button";
+import { Briefcase } from "lucide-react";
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ export const LoginForm: React.FC = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      router.push("/");
+      router.push("/dashboard");
     } else {
       setError(result.error);
     }
@@ -31,6 +32,9 @@ export const LoginForm: React.FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+        <Briefcase className="w-5 h-5 text-white" />
+      </div>
       <h1 className="text-3xl font-bold text-center mb-2">Welcome Back</h1>
       <p className="text-center text-gray-600 mb-8">
         Login to your Techdive account
@@ -75,7 +79,7 @@ export const LoginForm: React.FC = () => {
             <span className="ml-2 text-sm text-gray-600">Remember me</span>
           </label>
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="text-sm text-blue-600 hover:underline"
           >
             Forgot password?
@@ -91,7 +95,7 @@ export const LoginForm: React.FC = () => {
         <p className="text-center text-gray-600">
           Don&apos;t have an account?{" "}
           <Link
-            href="/signup"
+            href="/auth/signup"
             className="text-blue-600 font-semibold hover:underline"
           >
             Sign up
