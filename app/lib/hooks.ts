@@ -44,7 +44,7 @@ export function useAuth() {
     document.cookie = "auth_token=; path=/; max-age=0";
     setUser(null);
     setIsAuthenticated(false);
-    router.push("/auth/login");
+    router.push("/");
   }, [router]);
 
   return {

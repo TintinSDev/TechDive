@@ -30,51 +30,71 @@ export default function LandingPage() {
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
 
   // Handle email newsletter signup
+  // const handleNewsletterSignup = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!email) return;
+
+  //   setLoading(true);
+  //   setError("");
+
+  //   try {
+  //     // If user is logged in, update preferences
+  //     if (isAuthenticated) {
+  //       await api.updateEmailPreferences({
+  //         emailNotifications: true,
+  //         notificationFrequency: "daily",
+  //       });
+  //       setSubmitted(true);
+  //       setEmail("");
+  //     } else {
+  //       // If not logged in, redirect to signup with email pre-filled
+  //       router.push(`/signup?email=${encodeURIComponent(email)}`);
+  //     }
+  //   } catch (err) {
+  //     setError("Failed to subscribe. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+
+  //   // Reset submitted message after 3 seconds
+  //   setTimeout(() => setSubmitted(false), 3000);
+  // };
   const handleNewsletterSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-
-    setLoading(true);
-    setError("");
 
     try {
-      // If user is logged in, update preferences
-      if (isAuthenticated) {
-        await api.updateEmailPreferences({
-          emailNotifications: true,
-          notificationFrequency: "daily",
-        });
-        setSubmitted(true);
-        setEmail("");
-      } else {
-        // If not logged in, redirect to signup with email pre-filled
-        router.push(`/signup?email=${encodeURIComponent(email)}`);
-      }
+      setLoading(true);
+      // ... optional: your API call to register the newsletter subscription email hook
+
+      // 🎯 Fix the path route directory here:
+      router.push(`/auth/signup?email=${encodeURIComponent(email)}`);
+
+      // (Or if you are using window.location):
+      // window.location.href = `/auth/signup?email=${encodeURIComponent(email)}`;
     } catch (err) {
-      setError("Failed to subscribe. Please try again.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
-
-    // Reset submitted message after 3 seconds
-    setTimeout(() => setSubmitted(false), 3000);
   };
-
   // Handle plan selection and redirect to pricing or signup
   const handleSelectPlan = (plan: "pro" | "enterprise") => {
     setSelectedPlan(plan);
     if (isAuthenticated) {
-      router.push("/pricing");
+      router.push("/dashboard/pricing");
     } else {
       router.push(`/signup?plan=${plan}`);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-sl
+ate-900"
+    >
+      {" "}
       {/* Navigation */}
       <Navbar />
-
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
@@ -160,7 +180,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* Job Categories - Linked to Filtering */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-6xl mx-auto">
@@ -185,7 +204,8 @@ export default function LandingPage() {
               { icon: "🤖", title: "Machine Learning", category: "ml" },
               { icon: "✍️", title: "Technical Writing", category: "writing" },
             ].map((job) => (
-              <Link key={job.title} href={`/jobs?category=${job.category}`}>
+              // <Link key={job.title} href={`/jobs?category=${job.category}`}>
+              <Link key={job.title} href="/auth/signup">
                 <div className="p-6 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-blue-500/50 hover:bg-slate-800/80 transition cursor-pointer group h-full">
                   <div className="text-3xl mb-3">{job.icon}</div>
                   <h3 className="text-white font-semibold mb-2 group-hover:text-blue-400">
@@ -200,7 +220,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* Features */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -254,7 +273,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* Pricing - Fully Connected to Checkout */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-5xl mx-auto">
@@ -375,13 +393,12 @@ export default function LandingPage() {
 
           {/* View Full Pricing */}
           <div className="text-center mt-12">
-            <Link href="/pricing">
+            <Link href="/dashboard/pricing">
               <Button variant="outline">View Full Pricing & FAQ</Button>
             </Link>
           </div>
         </div>
       </section>
-
       {/* Social Proof */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-6xl mx-auto">
@@ -438,7 +455,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-700">
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-blue-600/10 to-cyan-600/10 border border-blue-500/30 rounded-lg p-12">
@@ -456,7 +472,7 @@ export default function LandingPage() {
               </Button>
             </Link>
           ) : (
-            <Link href="/signup">
+            <Link href="/auth/signup">
               <Button size="lg" className="flex items-center gap-2 mx-auto">
                 Get Started Free <ChevronRight className="w-5 h-5" />
               </Button>
@@ -464,7 +480,6 @@ export default function LandingPage() {
           )}
         </div>
       </section>
-
       {/* Footer */}
       <footer className="border-t border-slate-700 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -484,7 +499,10 @@ export default function LandingPage() {
                   </a>
                 </li>
                 <li>
-                  <a href="/pricing" className="hover:text-white transition">
+                  <a
+                    href="/dashboard/pricing"
+                    className="hover:text-white transition"
+                  >
                     Pricing
                   </a>
                 </li>

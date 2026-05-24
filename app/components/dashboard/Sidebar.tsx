@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DASHBOARD_NAVIGATION } from "@/app/lib/constants";
 import { useAuth } from "@/app/lib/hooks";
+import { Briefcase } from "lucide-react";
 
 // 🔌 Define the properties types for toggle control
 interface SidebarProps {
@@ -25,9 +26,15 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     >
       {/* Logo */}
       <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+          <Briefcase className="w-5 h-5 text-white" />
+        </div>
         <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
           Techdive
         </h1>
+        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+          <Briefcase className="w-5 h-5 text-white" />
+        </div>
         {/* ❌ Close button visible ONLY on mobile */}
         <button
           onClick={onClose}
