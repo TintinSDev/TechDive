@@ -13,11 +13,23 @@ export const ForgotPasswordForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
+
+      // We set submitted true regardless or handle errors transparently
       setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   if (submitted) {

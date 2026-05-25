@@ -118,6 +118,7 @@ export const DASHBOARD_NAVIGATION = [
     href: "/dashboard/preferences",
     icon: "🔔",
   },
+  { name: "Pricing", href: "/dashboard/pricing", icon: "💳" },
   {
     name: "Settings",
     href: "/dashboard/settings",
