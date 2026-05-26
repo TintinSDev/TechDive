@@ -52,6 +52,13 @@ export function useAuth() {
     loading,
     isAuthenticated,
     logout,
+    token:
+      typeof window !== "undefined"
+        ? document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("auth_token="))
+            ?.split("=")[1]
+        : undefined,
   };
 }
 
@@ -130,6 +137,7 @@ export function useSavedJobs() {
   const [saved, setSaved] = useState<SavedJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter(); // 🚀 1. Injected router context here
 
   const fetchSavedJobs = useCallback(async () => {
     try {
@@ -144,25 +152,42 @@ export function useSavedJobs() {
     }
   }, []);
 
-  const saveJob = useCallback(async (jobId: string) => {
-    try {
-      const result = await api.saveJob(jobId);
+  const saveJob = useCallback(
+    async (jobId: string) => {
+      try {
+        const result = await api.saveJob(jobId);
 
-      // 🔌 Push the result directly since it already is the SavedJob object
-      setSaved((prev) => [...prev, result]);
+        // 🔌 Push the result directly since it already is the SavedJob object
+        setSaved((prev) => [...prev, result]);
 
-      return true;
-    } catch (err: any) {
-      setError(err.message || "Failed to save job");
-      return false;
-    }
-  }, []);
+        return true;
+      } catch (err: any) {
+        // 🎯 2. Intercept Tier limits thrown by Express tierGuard.js middleware
+        const errMsg = err.message?.toLowerCase() || "";
+        if (
+          err.status === 403 ||
+          errMsg.includes("tier limit") ||
+          errMsg.includes("upgrade")
+        ) {
+          alert(
+            "⚠️ Plan Limit Reached: Free accounts are limited to 3 saved jobs. Redirecting to upgrade options...",
+          );
+          router.push("/dashboard/pricing");
+          return false;
+        }
+
+        setError(err.message || "Failed to save job");
+        return false;
+      }
+    },
+    [router],
+  );
 
   const unsaveJob = useCallback(async (jobId: string) => {
     try {
       await api.unsaveJob(jobId);
 
-      setSaved((prev) => prev.filter((s) => s.jobId !== jobId)); // ✅ FIXED
+      setSaved((prev) => prev.filter((s) => s.jobId !== jobId));
 
       return true;
     } catch (err: any) {

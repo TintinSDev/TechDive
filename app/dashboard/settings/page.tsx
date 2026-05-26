@@ -1,12 +1,14 @@
 "use client";
 
-import { useAuth } from "@/app/lib/hooks";
+import { useAuth, useUserProfile } from "@/app/lib/hooks"; // 🚀 Added useUserProfile
 import { Button } from "@/app/components/common/Button";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CreditCard, LogOut, Trash2 } from "lucide-react"; // Nice clean iconography wrappers
 
 export default function SettingsPage() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const { user, loading } = useUserProfile(); // 🔌 Read fully hydrated Prisma DB data (includes subscription fields)
   const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -23,27 +25,37 @@ export default function SettingsPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <p className="text-gray-400 animate-pulse">
+          Loading settings configurations...
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-2xl bg-cyan-900 rounded-lg shadow-lg p-8 mx-auto">
+    <div className="max-w-2xl bg-slate-900 rounded-lg shadow-xl p-8 mx-auto text-white border border-slate-800">
       <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
 
       {/* Account Info */}
-      <div className="bg-white p-6 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+      <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-slate-200">
           Account Information
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-400">
               Email
             </label>
-            <p className="text-gray-900 mt-1">{user?.email}</p>
+            <p className="text-white mt-1 font-mono text-sm">{user?.email}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-400">
               Member Since
             </label>
-            <p className="text-gray-900 mt-1">
+            <p className="text-white mt-1">
               {user?.createdAt
                 ? new Date(user.createdAt).toLocaleDateString()
                 : "N/A"}
@@ -53,33 +65,50 @@ export default function SettingsPage() {
       </div>
 
       {/* Subscription Info */}
-      <div className="bg-white p-6 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">
-          Subscription
-        </h2>
+      <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow mb-6">
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-xl font-semibold text-slate-200">Subscription</h2>
+
+          {/* 🎯 Stripe Billing Management Portal Integration */}
+          <a
+            href="https://billing.stripe.com/p/login/test_eVq7sD3Yi6UV1ioeMf3Ru00" // 🔗 Your copied link
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 border-blue-500 text-blue-400 hover:bg-blue-950/40"
+            >
+              <CreditCard className="w-4 h-4" />
+              Manage Billing
+            </Button>
+          </a>
+        </div>
+
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-400">
               Current Plan
             </label>
-            <p className="text-gray-900 mt-1 capitalize font-semibold">
+            <p className="text-green-400 mt-1 capitalize font-bold text-lg tracking-wide">
               {user?.subscription?.plan || "Free"}
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-400">
               Status
             </label>
-            <p className="text-gray-900 mt-1 capitalize">
+            <p className="text-white mt-1 capitalize">
               {user?.subscription?.status || "Active"}
             </p>
           </div>
           {user?.subscription?.currentPeriodEnd && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-slate-400">
                 Renews On
               </label>
-              <p className="text-gray-900 mt-1">
+              <p className="text-white mt-1">
                 {new Date(
                   user.subscription.currentPeriodEnd,
                 ).toLocaleDateString()}
@@ -90,17 +119,25 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
-        <h2 className="text-xl font-semibold text-red-900 mb-4">Danger Zone</h2>
+      <div className="bg-red-950/20 border border-red-900/50 p-6 rounded-lg">
+        <h2 className="text-xl font-semibold text-red-400 mb-4">Danger Zone</h2>
 
         <div className="space-y-4">
           {/* Logout */}
-          <div className="flex justify-between items-center pb-4 border-b">
+          <div className="flex justify-between items-center pb-4 border-b border-red-900/30">
             <div>
-              <h3 className="font-semibold text-gray-900">Logout</h3>
-              <p className="text-gray-600 text-sm">Sign out from all devices</p>
+              <h3 className="font-semibold text-slate-200">Logout</h3>
+              <p className="text-slate-400 text-sm">
+                Sign out from this active browser session
+              </p>
             </div>
-            <Button onClick={logout} variant="outline" size="sm">
+            <Button
+              onClick={logout}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              <LogOut className="w-4 h-4" />
               Logout
             </Button>
           </div>
@@ -108,32 +145,35 @@ export default function SettingsPage() {
           {/* Delete Account */}
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-semibold text-red-900">Delete Account</h3>
-              <p className="text-red-700 text-sm">
-                Permanently delete your account and all data
+              <h3 className="font-semibold text-red-400">Delete Account</h3>
+              <p className="text-red-300/70 text-sm">
+                Permanently wipe your account database configurations and
+                listings
               </p>
             </div>
             <Button
               onClick={() => setShowDeleteConfirm(true)}
               variant="outline"
               size="sm"
-              className="text-red-600 border-red-600 hover:bg-red-50"
+              className="text-red-400 border-red-500/40 hover:bg-red-950/60 flex items-center gap-2"
             >
+              <Trash2 className="w-4 h-4" />
               Delete
             </Button>
           </div>
 
           {/* Delete Confirmation */}
           {showDeleteConfirm && (
-            <div className="mt-4 p-4 bg-red-100 rounded-lg border border-red-300">
-              <p className="text-red-900 font-semibold mb-4">
-                Are you sure? This action cannot be undone.
+            <div className="mt-4 p-4 bg-red-950/40 rounded-lg border border-red-800/60">
+              <p className="text-red-200 font-semibold mb-4">
+                ⚠️ Critical Warning: This operational payload cannot be undone.
+                Are you sure?
               </p>
               <div className="flex gap-2">
                 <Button
                   onClick={handleDeleteAccount}
                   loading={deleting}
-                  className="bg-red-600 hover:bg-red-700"
+                  className="bg-red-600 hover:bg-red-700 text-white border-none"
                 >
                   Yes, Delete My Account
                 </Button>
@@ -141,6 +181,7 @@ export default function SettingsPage() {
                   onClick={() => setShowDeleteConfirm(false)}
                   variant="outline"
                   disabled={deleting}
+                  className="border-slate-600 text-slate-300"
                 >
                   Cancel
                 </Button>

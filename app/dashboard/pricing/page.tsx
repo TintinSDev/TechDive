@@ -1,13 +1,50 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/lib/hooks";
 import { PRICING_PLANS } from "@/app/lib/constants";
 import { Button } from "@/app/components/common/Button";
 import { Check } from "lucide-react";
+import { api } from "@/app/lib/api";
 
 export default function PricingPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, token } = useAuth(); // Assuming your auth hook provides the user's JWT token
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handleSubscribe = async (planId: string) => {
+    if (planId === "free") return;
+
+    setLoadingPlan(planId);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/subscriptions/paystack/checkout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Passes authentication down to Express
+          },
+          body: JSON.stringify({ plan: planId }),
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create checkout session");
+      }
+
+      // 🚀 Redirect the user directly to PayStack's hosted checkout page
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      alert(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-20 px-4 sm:px-6 lg:px-8">
@@ -50,24 +87,31 @@ export default function PricingPage() {
                     </span>
                     <span className="text-gray-400 ml-2">/month</span>
                   </div>
-                  {plan.price > 0 && (
-                    <p className="text-gray-400 text-sm mt-2">
-                      Billed monthly. Cancel anytime.
-                    </p>
-                  )}
                 </div>
 
-                <Link
-                  href={isAuthenticated ? "/dashboard" : "/signup"}
-                  className="w-full block"
-                >
+                {!isAuthenticated ? (
+                  <Link href="/auth/signup" className="w-full block">
+                    <Button
+                      className="w-full"
+                      variant={plan.popular ? "primary" : "outline"}
+                    >
+                      Sign Up to Start
+                    </Button>
+                  </Link>
+                ) : plan.id === "free" ? (
+                  <div className="text-slate-400 text-center font-medium py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-sm">
+                    Your Current Plan
+                  </div>
+                ) : (
                   <Button
                     className="w-full"
                     variant={plan.popular ? "primary" : "outline"}
+                    loading={loadingPlan === plan.id}
+                    onClick={() => handleSubscribe(plan.id)}
                   >
                     {plan.cta}
                   </Button>
-                </Link>
+                )}
 
                 <div className="mt-8 space-y-4">
                   {plan.features.map((feature, i) => (
@@ -80,50 +124,6 @@ export default function PricingPage() {
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="mt-20 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-left">
-              <h4 className="font-semibold text-white mb-2">
-                Can I change plans?
-              </h4>
-              <p className="text-gray-400">
-                Yes! Upgrade or downgrade anytime. Changes take effect on your
-                next billing cycle.
-              </p>
-            </div>
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-left">
-              <h4 className="font-semibold text-white mb-2">
-                Is there a free trial?
-              </h4>
-              <p className="text-gray-400">
-                Yes! Pro and Enterprise plans include a 7-day free trial. No
-                credit card required.
-              </p>
-            </div>
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-left">
-              <h4 className="font-semibold text-white mb-2">
-                Do you offer refunds?
-              </h4>
-              <p className="text-gray-400">
-                Full refund within 30 days of purchase if you&apos;re not
-                satisfied.
-              </p>
-            </div>
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-left">
-              <h4 className="font-semibold text-white mb-2">
-                What about team plans?
-              </h4>
-              <p className="text-gray-400">
-                Enterprise plans support multiple team members. Contact us for
-                custom pricing.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

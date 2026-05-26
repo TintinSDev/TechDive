@@ -30,10 +30,13 @@ export const EXPERIENCE_LEVELS = [
   { value: "senior", label: "Senior" },
 ];
 
+// app/lib/constants.ts
 export const PRICING_PLANS = [
   {
+    id: "free",
     name: "Free",
     price: 0,
+    payStackPlanCode: null, // No charge
     description: "Perfect to get started",
     features: [
       "Browse all jobs",
@@ -44,8 +47,10 @@ export const PRICING_PLANS = [
     cta: "Get Started",
   },
   {
+    id: "pro",
     name: "Pro",
     price: 9.99,
+    payStackPlanCode: "PLN_rkl7vn14k3c84yl", // Replace with real test key from dashboard
     description: "For active job seekers",
     popular: true,
     features: [
@@ -56,11 +61,13 @@ export const PRICING_PLANS = [
       "Salary insights",
       "Priority support",
     ],
-    cta: "Start 7-Day Trial",
+    cta: "Subscribe Now",
   },
   {
+    id: "enterprise",
     name: "Enterprise",
-    price: 24.99,
+    price: 29.99,
+    payStackPlanCode: "PLN_er9hd0o2hlpzm9c", // Replace with real test key from dashboard
     description: "For recruiters & teams",
     features: [
       "All Pro features",
@@ -70,7 +77,7 @@ export const PRICING_PLANS = [
       "Job posting credits",
       "Dedicated support",
     ],
-    cta: "Start 7-Day Trial",
+    cta: "Subscribe Now",
   },
 ];
 

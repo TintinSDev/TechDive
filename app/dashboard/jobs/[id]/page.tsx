@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useJob, useSavedJobs } from "@/app/lib/hooks";
 import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
 import { Button } from "@/app/components/common/Button";
@@ -8,6 +8,7 @@ import { api } from "@/app/lib/api";
 
 export default function JobDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
   const { job, loading, error } = useJob(id);
   const { isJobSaved, saveJob, unsaveJob } = useSavedJobs();
@@ -29,18 +30,29 @@ export default function JobDetailPage() {
     setSaving(false);
   };
   const handleApply = async (e: React.MouseEvent) => {
-    // 1. If there's no url or we are already processing, do nothing
     if (!job.applyUrl || applying) return;
 
     try {
       setApplying(true);
 
-      // 2. Fire and hit your Express endpoint via api.ts wrapper
+      // Fire and hit your Express endpoint via api.ts wrapper
       await api.request("/applications", {
         method: "POST",
         body: JSON.stringify({ jobId: job.id }),
       });
-    } catch (err) {
+    } catch (err: any) {
+      // 🎯 Catch the 403 Tier Guard restriction payload cleanly
+      if (
+        err.status === 403 ||
+        (err.message && err.message.includes("Limit Reached"))
+      ) {
+        e.preventDefault(); // 🛑 Stop the browser from opening the external application link window
+        alert(
+          "⚠️ Tier Limit Reached: Free accounts are limited to 3 job applications. Redirecting to upgrade options...",
+        );
+        router.push("/dashboard/pricing");
+        return;
+      }
       console.error("Failed to log job application state:", err);
     } finally {
       setApplying(false);
