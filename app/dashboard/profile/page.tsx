@@ -14,7 +14,7 @@ export default function ProfilePage() {
     location: "",
     skills: [] as string[],
     experience: "",
-    preferredRole: [] as string[], // Match schema.prisma exactly (singular role)
+    preferredRole: [] as string[],
   });
   const [saving, setSaving] = useState(false);
 
@@ -36,7 +36,6 @@ export default function ProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      // 🛡️ formData is safely cast to bypass strict string literal enum checks
       await updateProfile(formData as any);
       alert("Profile updated successfully!");
     } catch (err) {
@@ -49,54 +48,55 @@ export default function ProfilePage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {/* 🎨 Header UI Fixes: Clean light text that stays legible against a dark theme */}
+    <div className="max-w-3xl mx-auto bg-gray-100 space-y-8">
+      {/* Header Block aligned perfectly with the Tracker panel */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
           Profile Settings
         </h1>
-        <p className="text-gray-600 font-bold mt-1 text-sm">
-          Manage your professional information and job preferences.
+        <p className="text-gray-600 mt-1 text-base">
+          Manage your professional information and target preferences to power
+          your job matching pipeline.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-slate-900 border border-slate-800 rounded-xl p-8 space-y-6 shadow-xl text-slate-200"
+        className=" bg-gray-400 border border-slate-200 rounded-xl p-6 sm:p-8 space-y-6 shadow-sm bg-gradient-to-b from-white to-slate-50/30"
       >
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
+        {/* Name Input */}
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-slate-800">
             Full Name
           </label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
+            className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium"
             placeholder="John Doe"
           />
         </div>
 
-        {/* Bio */}
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Bio
+        {/* Bio Input */}
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-slate-800">
+            Professional Bio
           </label>
           <textarea
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             rows={4}
-            className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition resize-none"
-            placeholder="Tell us about your background..."
+            className="w-full text-gray-700 px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium resize-none"
+            placeholder="Tell recruiters about your core experience, stacks, or tech achievements..."
           />
         </div>
 
-        {/* Dynamic Two-Column Layout */}
+        {/* Dynamic Two-Column Grid Setup */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Location */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+          {/* Location Input */}
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-slate-800">
               Location
             </label>
             <input
@@ -105,42 +105,64 @@ export default function ProfilePage() {
               onChange={(e) =>
                 setFormData({ ...formData, location: e.target.value })
               }
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
-              placeholder="e.g. San Francisco, CA"
+              className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium"
+              placeholder="e.g. Manhattan, New York"
             />
           </div>
 
-          {/* Experience */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+          {/* Experience Level Selector dropdown */}
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-slate-800">
               Experience Level
             </label>
-            <select
-              value={formData.experience}
-              onChange={(e) =>
-                setFormData({ ...formData, experience: e.target.value })
-              }
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-lg text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition cursor-pointer"
-            >
-              <option value="" className="text-slate-500">
-                Select level
-              </option>
-              <option value="entry-level">Entry Level</option>
-              <option value="junior">Junior</option>
-              <option value="mid">Mid-Level</option>
-              <option value="senior">Senior</option>
-            </select>
+            <div className="relative">
+              <select
+                value={formData.experience}
+                onChange={(e) =>
+                  setFormData({ ...formData, experience: e.target.value })
+                }
+                className="w-full appearance-none px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium cursor-pointer"
+              >
+                <option value="" className="text-slate-400">
+                  Select level
+                </option>
+                <option value="entry-level">Entry Level</option>
+                <option value="junior">Junior</option>
+                <option value="mid">Mid-Level</option>
+                <option value="senior">Senior</option>
+              </select>
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
-        <hr className="border-slate-800 my-4" />
+        <hr className="border-slate-100 my-2" />
 
-        {/* Skills */}
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Skills
-          </label>
-          <div className="flex flex-wrap gap-2 bg-slate-950 p-4 border border-slate-800 rounded-xl">
+        {/* Skills Tag Section */}
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-bold text-slate-800">
+              Core Technical Skills
+            </label>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Select your primary programming methodologies.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 bg-slate-50/60 p-4 border border-slate-100 rounded-xl">
             {COMMON_SKILLS.map((skill) => {
               const isSelected = formData.skills.includes(skill);
               return (
@@ -155,10 +177,10 @@ export default function ProfilePage() {
                         : [...formData.skills, skill],
                     });
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all duration-150 ${
                     isSelected
-                      ? "bg-blue-600 text-white shadow"
-                      : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+                      ? "bg-blue-600 text-white border-blue-700 shadow-sm shadow-blue-500/10"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800"
                   }`}
                 >
                   {skill}
@@ -168,12 +190,17 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Preferred Roles */}
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Preferred Roles
-          </label>
-          <div className="flex flex-wrap gap-2 bg-slate-950 p-4 border border-slate-800 rounded-xl">
+        {/* Preferred Target Roles Section */}
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-bold text-slate-800">
+              Preferred Target Roles
+            </label>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Select job paths to customize your home dashboard matches.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 bg-slate-50/60 p-4 border border-slate-100 rounded-xl">
             {JOB_CATEGORIES.map((cat) => {
               const isSelected = formData.preferredRole.includes(cat.value);
               return (
@@ -188,10 +215,10 @@ export default function ProfilePage() {
                         : [...formData.preferredRole, cat.value],
                     });
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all duration-150 ${
                     isSelected
-                      ? "bg-cyan-600 text-white shadow"
-                      : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+                      ? "bg-cyan-600 text-white border-cyan-700 shadow-sm shadow-cyan-500/10"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800"
                   }`}
                 >
                   {cat.label}
@@ -201,12 +228,15 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <Button
-          loading={saving}
-          className="w-full bg-blue-600 hover:bg-blue-500 py-3 text-white font-medium shadow-lg transition"
-        >
-          Save Profile
-        </Button>
+        {/* Save CTA Trigger */}
+        <div className="pt-2">
+          <Button
+            loading={saving}
+            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 py-3 text-white text-sm font-bold shadow-md shadow-blue-500/10 transition-all rounded-lg"
+          >
+            Save Profile Changes
+          </Button>
+        </div>
       </form>
     </div>
   );

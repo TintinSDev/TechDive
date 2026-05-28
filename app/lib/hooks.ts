@@ -1,5 +1,3 @@
-// app/lib/hooks.ts
-
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -137,7 +135,7 @@ export function useSavedJobs() {
   const [saved, setSaved] = useState<SavedJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // 🚀 1. Injected router context here
+  const router = useRouter();
 
   const fetchSavedJobs = useCallback(async () => {
     try {
@@ -156,13 +154,9 @@ export function useSavedJobs() {
     async (jobId: string) => {
       try {
         const result = await api.saveJob(jobId);
-
-        // 🔌 Push the result directly since it already is the SavedJob object
         setSaved((prev) => [...prev, result]);
-
         return true;
       } catch (err: any) {
-        // 🎯 2. Intercept Tier limits thrown by Express tierGuard.js middleware
         const errMsg = err.message?.toLowerCase() || "";
         if (
           err.status === 403 ||
@@ -186,9 +180,7 @@ export function useSavedJobs() {
   const unsaveJob = useCallback(async (jobId: string) => {
     try {
       await api.unsaveJob(jobId);
-
       setSaved((prev) => prev.filter((s) => s.jobId !== jobId));
-
       return true;
     } catch (err: any) {
       setError(err.message || "Failed to unsave job");
@@ -320,24 +312,35 @@ export function useUserProfile() {
   };
 }
 
-/**
- * Hook to manage email preferences
- */
+export interface EmailPreferencesData {
+  emailNotifications: boolean;
+  notificationFrequency: string;
+  newJobMatches: boolean;
+  jobApplicationUpdates: boolean;
+  platformNewsAndTips: boolean;
+  timezone: string;
+}
+
 export function useEmailPreferences() {
-  const [preferences, setPreferences] = useState<{
-    emailNotifications: boolean;
-    notificationFrequency: string;
-  } | null>(null);
+  const [preferences, setPreferences] = useState<EmailPreferencesData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPreferences = useCallback(async () => {
     try {
       setLoading(true);
-      const prefs = await api.getEmailPreferences();
+      // 🎯 FIXED: Typecast response to any to support newly updated properties from the network response
+      const prefs = (await api.getEmailPreferences()) as any;
+
       setPreferences({
         emailNotifications: prefs.emailNotifications,
         notificationFrequency: prefs.notificationFrequency,
+        newJobMatches: prefs.newJobMatches ?? true,
+        jobApplicationUpdates: prefs.jobApplicationUpdates ?? true,
+        platformNewsAndTips: prefs.platformNewsAndTips ?? false,
+        timezone: prefs.timezone || "UTC",
       });
       setError(null);
     } catch (err: any) {
@@ -348,16 +351,19 @@ export function useEmailPreferences() {
   }, []);
 
   const updatePreferences = useCallback(
-    async (data: {
-      emailNotifications?: boolean;
-      notificationFrequency?: string;
-    }) => {
+    async (data: Partial<EmailPreferencesData>) => {
       try {
         setLoading(true);
-        const updated = await api.updateEmailPreferences(data);
+        // 🎯 FIXED: Typecast response to any here as well to cleanly match updated keys
+        const updated = (await api.updateEmailPreferences(data)) as any;
+
         setPreferences({
           emailNotifications: updated.emailNotifications,
           notificationFrequency: updated.notificationFrequency,
+          newJobMatches: updated.newJobMatches ?? true,
+          jobApplicationUpdates: updated.jobApplicationUpdates ?? true,
+          platformNewsAndTips: updated.platformNewsAndTips ?? false,
+          timezone: updated.timezone || "UTC",
         });
         setError(null);
         return true;

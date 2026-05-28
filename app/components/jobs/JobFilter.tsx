@@ -1,82 +1,59 @@
 "use client";
 
-import { useState } from "react";
 import {
   JOB_CATEGORIES,
   JOB_TYPES,
   EXPERIENCE_LEVELS,
 } from "@/app/lib/constants";
-import { Button } from "@/app/components/common/Button";
 
 interface JobFilters {
   category?: string;
   type?: string;
   experience?: string;
-  search?: string;
   minSalary?: number;
   maxSalary?: number;
 }
 
 interface JobFilterProps {
+  filters: JobFilters;
   onFilterChange: (filters: JobFilters) => void;
+  onReset: () => void;
 }
 
-export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
-  const [category, setCategory] = useState("");
-  const [type, setType] = useState("");
-  const [experience, setExperience] = useState("");
-  const [search, setSearch] = useState("");
-  const [minSalary, setMinSalary] = useState("");
-  const [maxSalary, setMaxSalary] = useState("");
-
-  const handleApplyFilters = () => {
+export const JobFilter: React.FC<JobFilterProps> = ({
+  filters,
+  onFilterChange,
+  onReset,
+}) => {
+  // Directly updates individual keys inside the unified parent object structure
+  const updateFilterKey = (key: keyof JobFilters, value: any) => {
     onFilterChange({
-      category: category || undefined,
-      type: type || undefined,
-      experience: experience || undefined,
-      search: search || undefined,
-      minSalary: minSalary ? parseInt(minSalary) : undefined,
-      maxSalary: maxSalary ? parseInt(maxSalary) : undefined,
+      ...filters,
+      [key]: value || undefined, // Drop key completely if string is empty
     });
   };
 
-  const handleReset = () => {
-    setCategory("");
-    setType("");
-    setExperience("");
-    setSearch("");
-    setMinSalary("");
-    setMaxSalary("");
-    onFilterChange({});
-  };
-
   return (
-    <div className="bg-white w-100 p-6 rounded-lg border border-gray-600 sticky top-20">
-      <h3 className="text-lg text-gray-800 font-semibold mb-4">Filters</h3>
-
-      {/* Search */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Search
-        </label>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Job title, company..."
-          className="w-full px-3 text-gray-700 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+    <div className="bg-gray-200 p-6 border border-gray-300 rounded-xl shadow-xl hover:shadow-md hover:border-blue-500 transition-all duration-200 sticky top-24 space-y-5">
+      <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 className="text-lg text-gray-900 font-bold">Refine Results</h3>
+        <button
+          onClick={onReset}
+          className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          Clear All
+        </button>
       </div>
 
       {/* Category */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
           Category
         </label>
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.category || ""}
+          onChange={(e) => updateFilterKey("category", e.target.value)}
+          className="w-full px-3 py-2 text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         >
           <option value="">All Categories</option>
           {JOB_CATEGORIES.map((cat) => (
@@ -88,14 +65,14 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
       </div>
 
       {/* Type */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Type
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          Job Type
         </label>
         <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.type || ""}
+          onChange={(e) => updateFilterKey("type", e.target.value)}
+          className="w-full px-3 py-2 text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         >
           <option value="">All Types</option>
           {JOB_TYPES.map((t) => (
@@ -107,14 +84,14 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
       </div>
 
       {/* Experience */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Experience
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          Experience Level
         </label>
         <select
-          value={experience}
-          onChange={(e) => setExperience(e.target.value)}
-          className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={filters.experience || ""}
+          onChange={(e) => updateFilterKey("experience", e.target.value)}
+          className="w-full px-3 py-2 text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         >
           <option value="">All Levels</option>
           {EXPERIENCE_LEVELS.map((level) => (
@@ -126,36 +103,36 @@ export const JobFilter: React.FC<JobFilterProps> = ({ onFilterChange }) => {
       </div>
 
       {/* Salary Range */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Salary Range (USD)
+      <div>
+        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          Salary Range (USD / Year)
         </label>
         <div className="flex gap-2 text-gray-700">
           <input
             type="number"
-            value={minSalary}
-            onChange={(e) => setMinSalary(e.target.value)}
+            value={filters.minSalary || ""}
+            onChange={(e) =>
+              updateFilterKey(
+                "minSalary",
+                e.target.value ? parseInt(e.target.value) : "",
+              )
+            }
             placeholder="Min"
-            className="w 1/2 min-w-0 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-1/2 px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="number"
-            value={maxSalary}
-            onChange={(e) => setMaxSalary(e.target.value)}
+            value={filters.maxSalary || ""}
+            onChange={(e) =>
+              updateFilterKey(
+                "maxSalary",
+                e.target.value ? parseInt(e.target.value) : "",
+              )
+            }
             placeholder="Max"
-            className="w 1/2 min-w-0 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-1/2 px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-      </div>
-
-      {/* Buttons */}
-      <div className="flex gap-2 text-gray-700">
-        <Button onClick={handleApplyFilters} className="flex-1">
-          Apply
-        </Button>
-        <Button onClick={handleReset} variant="secondary" className="flex-1">
-          Reset
-        </Button>
       </div>
     </div>
   );

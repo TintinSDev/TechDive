@@ -9,7 +9,7 @@ export default function SavedJobsPage() {
 
   return (
     <div className="w-full rounded-lg shadow-lg p-8 mx-auto">
-      <h1 className="text-3xl text-cyan-700 font-bold mb-8">Saved Jobs</h1>
+      <h1 className="text-3xl text-gray-700 font-bold mb-8">Saved Jobs</h1>
 
       {loading ? (
         <LoadingSpinner />
