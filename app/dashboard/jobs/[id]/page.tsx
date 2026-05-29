@@ -1,4 +1,7 @@
 "use client";
+
+console.log("JOB PAGE LOADED");
+export const dynamic = "force-dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { useJob, useSavedJobs } from "@/app/lib/hooks";
 import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
