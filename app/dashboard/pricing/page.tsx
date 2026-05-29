@@ -18,7 +18,7 @@ export default function PricingPage() {
     setLoadingPlan(planId);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/subscriptions/paystack/checkout`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://techdive-backend-production.up.railway.app/api"}/subscriptions/paystack/checkout`,
         {
           method: "POST",
           headers: {

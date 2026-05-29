@@ -69,9 +69,8 @@ export default function SettingsPage() {
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-xl font-semibold text-slate-200">Subscription</h2>
 
-          {/* 🎯 Stripe Billing Management Portal Integration */}
           <a
-            href="https://billing.stripe.com/p/login/test_eVq7sD3Yi6UV1ioeMf3Ru00" // 🔗 Your copied link
+            href="https://paystack.shop/pay/6emngx8n8t || https://paystack.shop/pay/gunyt2bqe9" // 🔗 Link to billing management (Paystack dashboard or custom billing portal)
             target="_blank"
             rel="noopener noreferrer"
           >
