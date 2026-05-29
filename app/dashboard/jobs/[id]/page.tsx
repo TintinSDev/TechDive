@@ -29,35 +29,44 @@ export default function JobDetailPage() {
     }
     setSaving(false);
   };
-  const handleApply = async (e: React.MouseEvent) => {
-    if (!job.applyUrl || applying) return;
+
+  const handleApply = async (
+    e: React.MouseEvent,
+    jobId: string,
+    externalJobUrl: string,
+  ) => {
+    e.preventDefault();
+    setApplying(true); // Enable loader visualization state
 
     try {
-      setApplying(true);
+      // 1. Use your dedicated ApiClient method to verify and track the application
+      await api.createApplication(jobId);
 
-      // Fire and hit your Express endpoint via api.ts wrapper
-      await api.request("/applications", {
-        method: "POST",
-        body: JSON.stringify({ jobId: job.id }),
-      });
+      // 2. SUCCESS: Safe redirect opens ONLY if the tierGuard passes the action
+      window.open(externalJobUrl, "_blank", "noopener,noreferrer");
     } catch (err: any) {
-      // 🎯 Catch the 403 Tier Guard restriction payload cleanly
+      // 3. Since ApiClient throws error.error as the root text message string:
+      const errMsg = err.message || "Plan limit reached.";
+      const lowerMsg = errMsg.toLowerCase();
+
+      // 🎯 Catch the tier limitation message text passed directly via your handler
       if (
-        err.status === 403 ||
-        (err.message && err.message.includes("Limit Reached"))
+        lowerMsg.includes("limited to") ||
+        lowerMsg.includes("tier limit") ||
+        lowerMsg.includes("upgrade")
       ) {
-        e.preventDefault(); // 🛑 Stop the browser from opening the external application link window
-        alert(
-          "⚠️ Tier Limit Reached: Free accounts are limited to 3 job applications. Redirecting to upgrade options...",
-        );
+        alert(`⚠️ ${errMsg}`);
         router.push("/dashboard/pricing");
         return;
       }
-      console.error("Failed to log job application state:", err);
+
+      // Standard alternative network error alerts
+      alert("Could not process application tracking: " + errMsg);
     } finally {
-      setApplying(false);
+      setApplying(false); // Reset button UI state
     }
   };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -99,7 +108,7 @@ export default function JobDetailPage() {
             />
           </div>
 
-          {job.requirements?.length > 0 && (
+          {job.requirements && job.requirements.length > 0 && (
             <div className="mt-8 text-gray-900">
               <h2 className="text-2xl text-gray-900 font-bold mb-4">
                 Requirements
@@ -115,29 +124,25 @@ export default function JobDetailPage() {
           )}
 
           <div className="mt-8">
-            <div className="mt-8">
-              {job.applyUrl ? (
-                <a
-                  href={job.applyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleApply} // Hook into the click event
+            {job.applyUrl ? (
+              <a
+                href={job.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => handleApply(e, job.id, job.applyUrl || "")}
+              >
+                <Button
+                  disabled={applying}
+                  className="w-100 ml-45 bg-gray-200 shadow-sm text-black border rounded  border-gray-900 hover:bg-green-600 hover:text-white"
                 >
-                  <Button
-                    disabled={applying}
-                    className="w-full text-green-600 border border-green-600 hover:bg-green-600 hover:text-white"
-                  >
-                    {applying
-                      ? "Connecting to application page..."
-                      : "Apply Now"}
-                  </Button>
-                </a>
-              ) : (
-                <Button className="w-full" disabled>
-                  No Application Link Available
+                  {applying ? "Connecting to application page..." : "Apply Now"}
                 </Button>
-              )}
-            </div>
+              </a>
+            ) : (
+              <Button className="w-full" disabled>
+                No Application Link Available
+              </Button>
+            )}
           </div>
         </div>
       </div>

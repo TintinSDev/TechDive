@@ -157,26 +157,31 @@ export function useSavedJobs() {
         setSaved((prev) => [...prev, result]);
         return true;
       } catch (err: any) {
-        const errMsg = err.message?.toLowerCase() || "";
+        // 1. Get the error message from the thrown error instance
+        const errMsg = err.message || "Plan limit reached.";
+        const lowerMsg = errMsg.toLowerCase();
+
+        // 2. Safely read status if available, or fall back to checking message text
+        const status = err.status || err.response?.status;
+
         if (
-          err.status === 403 ||
-          errMsg.includes("tier limit") ||
-          errMsg.includes("upgrade")
+          status === 403 ||
+          lowerMsg.includes("tier limit") ||
+          lowerMsg.includes("upgrade") ||
+          lowerMsg.includes("limited to")
         ) {
-          alert(
-            "⚠️ Plan Limit Reached: Free accounts are limited to 3 saved jobs. Redirecting to upgrade options...",
-          );
+          // 🎯 FIX: Output the message directly since the API client unwarpped it for you!
+          alert(`⚠️ ${errMsg}`);
           router.push("/dashboard/pricing");
           return false;
         }
 
-        setError(err.message || "Failed to save job");
+        setError(errMsg);
         return false;
       }
     },
     [router],
   );
-
   const unsaveJob = useCallback(async (jobId: string) => {
     try {
       await api.unsaveJob(jobId);

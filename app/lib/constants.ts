@@ -49,14 +49,15 @@ export const PRICING_PLANS = [
   {
     id: "pro",
     name: "Pro",
-    price: 9.99,
+    price: 14.88,
     payStackPlanCode: "PLN_rkl7vn14k3c84yl", // Replace with real test key from dashboard
     description: "For active job seekers",
     popular: true,
     features: [
       "All Free features",
-      "Unlimited job saves",
+      "Upto 20 job applications per month",
       "Daily email alerts",
+      "Job application tracking",
       "Advanced filtering",
       "Salary insights",
       "Priority support",
@@ -66,15 +67,17 @@ export const PRICING_PLANS = [
   {
     id: "enterprise",
     name: "Enterprise",
-    price: 29.99,
+    price: 29.88,
     payStackPlanCode: "PLN_er9hd0o2hlpzm9c", // Replace with real test key from dashboard
     description: "For recruiters & teams",
     features: [
       "All Pro features",
-      "Team collaboration",
-      "Recruitment dashboard",
-      "API access",
-      "Job posting credits",
+      "Unlimited job applications",
+      "Unlimited job saves",
+      "Dedicated job alerts",
+      "Team collaboration features",
+      "Career matching algorithm",
+      "Instant real-time job alerts",
       "Dedicated support",
     ],
     cta: "Subscribe Now",
