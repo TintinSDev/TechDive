@@ -2,6 +2,7 @@
 
 export const dynamic = "force-dynamic";
 console.log("JOB PAGE LOADED");
+
 import { useParams, useRouter } from "next/navigation";
 import { useJob, useSavedJobs } from "@/app/lib/hooks";
 import { LoadingSpinner } from "@/app/components/common/LoadingSpinner";
@@ -22,7 +23,7 @@ export default function JobDetailPage() {
   if (error || !job) return <p className="text-red-600">Job not found</p>;
 
   const isSaved = isJobSaved(job.id);
-
+  console.log("JOB ID:", params.id);
   const handleSaveToggle = async () => {
     setSaving(true);
     if (isSaved) {
