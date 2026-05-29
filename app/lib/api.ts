@@ -9,8 +9,13 @@ import {
   JobApplication,
 } from "./types";
 
+// app/lib/api.ts
+
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://techdive-backend-production.up.railway.app/api";
+  process.env.NEXT_PUBLIC_API_URL &&
+  process.env.NEXT_PUBLIC_API_URL !== "undefined"
+    ? process.env.NEXT_PUBLIC_API_URL
+    : "https://techdive-backend-production.up.railway.app/api"; // Your live Railway production API endpoint URL
 
 interface FetchOptions extends RequestInit {
   skipToken?: boolean;
