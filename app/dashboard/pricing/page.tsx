@@ -100,7 +100,7 @@ export default function PricingPage() {
                   </Link>
                 ) : plan.id === "free" ? (
                   <div className="text-slate-400 text-center font-medium py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-sm">
-                    Your Current Plan
+                    Limited access - Upgrade to unlock all features
                   </div>
                 ) : (
                   <Button
