@@ -134,7 +134,7 @@ export default function JobDetailPage() {
               >
                 <Button
                   disabled={applying}
-                  className="w-100 ml-45 bg-gray-200 shadow-sm text-black border rounded  border-gray-900 hover:bg-green-600 hover:text-white"
+                  className="w-full bg-gray-200 shadow-sm text-black border rounded  border-gray-900 hover:bg-green-600 hover:text-white"
                 >
                   {applying ? "Connecting to application page..." : "Apply Now"}
                 </Button>
