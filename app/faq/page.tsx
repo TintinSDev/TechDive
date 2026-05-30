@@ -25,7 +25,7 @@ const faqItems: FAQItem[] = [
     category: "General",
     question: "Is Techdive free to use?",
     answer:
-      "Yes! Techdive has a free tier that allows you to browse jobs, apply filters, and save up to 3 jobs per month. For unlimited features, we offer Pro ($9.99/month) and Enterprise ($24.99/month) plans.",
+      "Yes! Techdive has a free tier that allows you to browse jobs, apply filters, and save up to 3 jobs per month. For unlimited features, we offer Pro ($14.88/month) and Enterprise ($29.88/month) plans.",
   },
   {
     id: 3,
@@ -74,14 +74,14 @@ const faqItems: FAQItem[] = [
     category: "Subscriptions",
     question: "What's included in the Pro plan?",
     answer:
-      "The Pro plan ($9.99/month) includes: unlimited job saves, daily personalized alerts, advanced filtering, salary insights, priority support, and early access to new features.",
+      "The Pro plan ($14.88/month) includes: unlimited job saves, daily personalized alerts, advanced filtering, salary insights, priority support, and early access to new features.",
   },
   {
     id: 10,
     category: "Subscriptions",
     question: "What's included in the Enterprise plan?",
     answer:
-      "The Enterprise plan ($24.99/month) includes everything in Pro, plus: team collaboration features, recruitment dashboard, API access, and 10 sponsored job posting credits per month.",
+      "The Enterprise plan ($29.88/month) includes everything in Pro, plus: team collaboration features, recruitment dashboard, API access, and 10 sponsored job posting credits per month.",
   },
   {
     id: 11,
@@ -95,7 +95,7 @@ const faqItems: FAQItem[] = [
     category: "Subscriptions",
     question: "What payment methods do you accept?",
     answer:
-      "We accept credit/debit cards via Stripe (international) and M-Pesa via Paystack (for Kenyan users). All payments are secure and encrypted.",
+      "We accept credit/debit cards via Stripe and Paystack. All payments are secure and encrypted.",
   },
   {
     id: 13,

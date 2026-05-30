@@ -354,7 +354,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <h3 className="text-white text-xl font-bold">Pro Tier</h3>
                 <div className="text-3xl font-black text-white">
-                  $9.99
+                  $14.88
                   <span className="text-xs font-medium text-slate-400 ml-1">
                     /mo
                   </span>
@@ -362,10 +362,12 @@ export default function LandingPage() {
                 <ul className="space-y-3 pt-2">
                   {[
                     "All Free features",
-                    "Unlimited job saves",
+                    "Upto 20 job applications per month",
                     "Daily email alerts",
+                    "Job application tracking",
                     "Advanced filtering",
                     "Salary insights",
+                    "Priority support",
                   ].map((item) => (
                     <li
                       key={item}
@@ -382,7 +384,7 @@ export default function LandingPage() {
                   onClick={() => handleSelectPlan("pro")}
                   className="w-full text-xs font-bold py-2.5"
                 >
-                  Start 7-Day Trial
+                  Sign up for Pro
                 </Button>
               </div>
             </div>
@@ -392,7 +394,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <h3 className="text-white text-xl font-bold">Enterprise</h3>
                 <div className="text-3xl font-black text-white">
-                  $24.99
+                  $29.88
                   <span className="text-xs font-medium text-slate-400 ml-1">
                     /mo
                   </span>
@@ -400,10 +402,13 @@ export default function LandingPage() {
                 <ul className="space-y-3 pt-2">
                   {[
                     "All Pro features",
-                    "Team collaboration",
-                    "Recruiter pipeline portal",
-                    "API lookup access",
-                    "Dedicated priority channels",
+                    "Unlimited job applications",
+                    "Unlimited job saves",
+                    "Dedicated job alerts",
+                    "Team collaboration features",
+                    "Career matching algorithm",
+                    "Instant real-time job alerts",
+                    "Dedicated support",
                   ].map((item) => (
                     <li
                       key={item}
@@ -421,7 +426,7 @@ export default function LandingPage() {
                   className="w-full text-xs font-bold py-2.5"
                   variant="secondary"
                 >
-                  Contact Sales
+                  Sign up for Enterprise
                 </Button>
               </div>
             </div>
